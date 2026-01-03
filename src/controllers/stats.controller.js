@@ -22,10 +22,7 @@ const getAccessibilityClause = (req) => {
                 departmentId: req.userDeptId
             },
             {
-                visibility: 'DEPARTMENT',
-                departmentId: req.userDeptId
-            },
-            {
+                visibility: 'PRIVATE',
                 creatorId: req.userId
             }
         ]
@@ -35,14 +32,21 @@ const getAccessibilityClause = (req) => {
 const getDocumentStatsByDept = async (req, res) => {
     try {
         const { startDate, endDate } = req.query;
-        const where = {};
+        const whereConditions = [];
+
         if (startDate && endDate) {
-            where.createdAt = { [Op.between]: [new Date(startDate), new Date(endDate)] };
+            whereConditions.push({
+                createdAt: { [Op.between]: [new Date(startDate), new Date(endDate)] }
+            });
         }
 
-        // Apply Visibility Filter
+        // Apply Visibility Filter properly
         const accessClause = getAccessibilityClause(req);
-        Object.assign(where, accessClause);
+        if (Object.keys(accessClause).length > 0) {
+            whereConditions.push(accessClause);
+        }
+
+        const where = whereConditions.length > 0 ? { [Op.and]: whereConditions } : {};
 
         const stats = await Document.findAll({
             attributes: [
@@ -76,18 +80,36 @@ const getDocumentStatsByDept = async (req, res) => {
 const getUsageStats = async (req, res) => {
     try {
         const { startDate, endDate } = req.query;
-        const where = {};
+        const whereConditions = [];
+
         if (startDate && endDate) {
-            where.createdAt = { [Op.between]: [new Date(startDate), new Date(endDate)] };
+            whereConditions.push({
+                createdAt: { [Op.between]: [new Date(startDate), new Date(endDate)] }
+            });
         }
 
-        // Apply Visibility Filter
+        // Apply Visibility Filter properly
         const accessClause = getAccessibilityClause(req);
-        Object.assign(where, accessClause);
+        if (Object.keys(accessClause).length > 0) {
+            whereConditions.push(accessClause);
+        }
+
+        const where = whereConditions.length > 0 ? { [Op.and]: whereConditions } : {};
 
         const totalDocs = await Document.count({ where });
-        const pendingDocs = await Document.count({ where: { ...where, status: 'PENDING' } });
-        const approvedDocs = await Document.count({ where: { ...where, status: 'APPROVED' } });
+        const pendingDocs = await Document.count({
+            where: {
+                ...where,
+                status: 'PENDING'
+            }
+        });
+        const approvedDocs = await Document.count({
+            where: {
+                ...where,
+                status: 'APPROVED'
+            }
+        });
+
         const interactionsWhere = {};
         if (startDate && endDate) {
             interactionsWhere.createdAt = { [Op.between]: [new Date(startDate), new Date(endDate)] };
@@ -116,16 +138,25 @@ const getMonthlyStats = async (req, res) => {
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
+        const whereConditions = [
+            { createdAt: { [Op.gte]: sixMonthsAgo } }
+        ];
+
+        // Apply Visibility Filter properly
+        const accessClause = getAccessibilityClause(req);
+        if (Object.keys(accessClause).length > 0) {
+            whereConditions.push(accessClause);
+        }
+
+        const where = { [Op.and]: whereConditions };
+
         // Query documents grouped by month
         const uploadsByMonth = await Document.findAll({
             attributes: [
                 [sequelize.fn('DATE_TRUNC', 'month', sequelize.col('Document.created_at')), 'month'],
                 [sequelize.fn('COUNT', sequelize.col('Document.id')), 'count']
             ],
-            where: {
-                createdAt: { [Op.gte]: sixMonthsAgo },
-                ...getAccessibilityClause(req)
-            },
+            where,
             group: [sequelize.fn('DATE_TRUNC', 'month', sequelize.col('Document.created_at'))],
             order: [[sequelize.fn('DATE_TRUNC', 'month', sequelize.col('Document.created_at')), 'ASC']],
             raw: true
@@ -187,14 +218,21 @@ const getMonthlyStats = async (req, res) => {
 const getTagStats = async (req, res) => {
     try {
         const { startDate, endDate } = req.query;
-        const where = {};
+        const whereConditions = [];
+
         if (startDate && endDate) {
-            where.createdAt = { [Op.between]: [new Date(startDate), new Date(endDate)] };
+            whereConditions.push({
+                createdAt: { [Op.between]: [new Date(startDate), new Date(endDate)] }
+            });
         }
 
-        // Apply Visibility Filter
+        // Apply Visibility Filter properly
         const accessClause = getAccessibilityClause(req);
-        Object.assign(where, accessClause);
+        if (Object.keys(accessClause).length > 0) {
+            whereConditions.push(accessClause);
+        }
+
+        const where = whereConditions.length > 0 ? { [Op.and]: whereConditions } : {};
 
         const stats = await db.Tag.findAll({
             attributes: [
@@ -226,14 +264,21 @@ const getTagStats = async (req, res) => {
 const getUserContributionStats = async (req, res) => {
     try {
         const { startDate, endDate } = req.query;
-        const where = {};
+        const whereConditions = [];
+
         if (startDate && endDate) {
-            where.createdAt = { [Op.between]: [new Date(startDate), new Date(endDate)] };
+            whereConditions.push({
+                createdAt: { [Op.between]: [new Date(startDate), new Date(endDate)] }
+            });
         }
 
-        // Apply Visibility Filter
+        // Apply Visibility Filter properly
         const accessClause = getAccessibilityClause(req);
-        Object.assign(where, accessClause);
+        if (Object.keys(accessClause).length > 0) {
+            whereConditions.push(accessClause);
+        }
+
+        const where = whereConditions.length > 0 ? { [Op.and]: whereConditions } : {};
 
         const stats = await User.findAll({
             attributes: [
@@ -270,12 +315,21 @@ const ExcelJS = require('exceljs');
 const exportDocumentsToExcel = async (req, res) => {
     try {
         const currentUser = await User.findByPk(req.userId);
+
+        // Build accessibility clause properly
+        const whereConditions = [];
+        const accessClause = getAccessibilityClause(req);
+        if (Object.keys(accessClause).length > 0) {
+            whereConditions.push(accessClause);
+        }
+        const where = whereConditions.length > 0 ? { [Op.and]: whereConditions } : {};
+
         const documents = await Document.findAll({
             include: [
                 { model: User, as: 'creator', attributes: ['fullName'] },
                 { model: Department, as: 'department', attributes: ['name'] }
             ],
-            where: getAccessibilityClause(req),
+            where,
             order: [['createdAt', 'DESC']]
         });
 

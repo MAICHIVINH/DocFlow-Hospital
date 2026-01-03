@@ -9,6 +9,12 @@ const listUsers = async (req, res) => {
         const offset = (page - 1) * limit;
 
         const where = {};
+
+        // Role-based filtering: Non-admin users can only see users in their department
+        if (req.userRole !== 'ADMIN') {
+            where.departmentId = req.userDeptId;
+        }
+
         if (department_id) where.departmentId = department_id;
         if (search) {
             console.log('Applying search filter:', search);

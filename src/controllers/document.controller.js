@@ -14,8 +14,8 @@ const checkDocumentAccess = async (userId, userRole, userDeptId, documentId) => 
     const doc = await Document.findByPk(documentId);
     if (!doc) return { allowed: false, message: 'Document not found' };
 
-    // Admin can access everything
-    if (userRole === 'ADMIN') return { allowed: true, document: doc };
+    // Admin and Manager can access everything
+    if (userRole === 'ADMIN' || userRole === 'MANAGER') return { allowed: true, document: doc };
 
     // Check visibility
     if (doc.visibility === 'PUBLIC') return { allowed: true, document: doc };
@@ -108,55 +108,95 @@ const listDocuments = async (req, res) => {
         const offset = (page - 1) * limit;
 
         const whereClause = {};
+        const andConditions = [];
 
         // 1. Role-based Access Control (Enforce Visibility)
-        if (req.userRole !== 'ADMIN') {
-            whereClause[Op.and] = [
-                {
-                    [Op.or]: [
-                        { visibility: 'PUBLIC' },
-                        {
-                            visibility: 'DEPARTMENT',
-                            departmentId: req.userDeptId
-                        },
-                        {
-                            visibility: 'PRIVATE',
-                            creatorId: req.userId
-                        }
-                    ]
-                }
-            ];
+        if (req.userRole !== 'ADMIN' && req.userRole !== 'MANAGER') {
+            andConditions.push({
+                [Op.or]: [
+                    { visibility: 'PUBLIC' },
+                    {
+                        visibility: 'DEPARTMENT',
+                        departmentId: req.userDeptId
+                    },
+                    {
+                        visibility: 'PRIVATE',
+                        creatorId: req.userId
+                    }
+                ]
+            });
         }
+
+        // Archive filter
         if (is_archived === 'true') {
-            whereClause.isArchived = true;
+            andConditions.push({ isArchived: true });
         } else {
             // For active documents, show those where is_archived is false OR null
-            whereClause.isArchived = { [Op.or]: [false, null] };
+            andConditions.push({ isArchived: { [Op.or]: [false, null] } });
+        }
+
+        // Status filter
+        if (status) {
+            andConditions.push({ status });
+        }
+
+        // Visibility filter (only if explicitly requested, and respects role-based access)
+        if (visibility) {
+            andConditions.push({ visibility });
+        }
+
+        // Department filter (staff can only see their own department)
+        if (department_id) {
+            andConditions.push({ departmentId: department_id });
+        }
+
+        // Creator filter
+        if (creator_id) {
+            andConditions.push({ creatorId: creator_id });
+        }
+
+        // Combine all AND conditions
+        if (andConditions.length > 0) {
+            whereClause[Op.and] = andConditions;
         }
 
         // Basic Search (Title, Description)
         if (search) {
-            whereClause[Op.or] = [
-                { title: { [Op.iLike]: `%${search}%` } },
-                { description: { [Op.iLike]: `%${search}%` } }
-            ];
+            const searchCondition = {
+                [Op.or]: [
+                    { title: { [Op.iLike]: `%${search}%` } },
+                    { description: { [Op.iLike]: `%${search}%` } }
+                ]
+            };
+            if (whereClause[Op.and]) {
+                whereClause[Op.and].push(searchCondition);
+            } else {
+                whereClause[Op.or] = searchCondition[Op.or];
+            }
         }
 
-        // Filters
-        if (department_id) whereClause.departmentId = department_id;
-        if (status) whereClause.status = status;
-        if (visibility) whereClause.visibility = visibility;
-        if (creator_id) whereClause.creatorId = creator_id;
-
-        // Date Range Filter
+        // Date Range Filter - Add to AND conditions if it exists
         if (start_date && end_date) {
-            whereClause.createdAt = {
-                [Op.between]: [new Date(start_date), new Date(end_date)]
-            };
+            const dateCondition = { createdAt: { [Op.between]: [new Date(start_date), new Date(end_date)] } };
+            if (whereClause[Op.and]) {
+                whereClause[Op.and].push(dateCondition);
+            } else {
+                Object.assign(whereClause, dateCondition);
+            }
         } else if (start_date) {
-            whereClause.createdAt = { [Op.gte]: new Date(start_date) };
+            const dateCondition = { createdAt: { [Op.gte]: new Date(start_date) } };
+            if (whereClause[Op.and]) {
+                whereClause[Op.and].push(dateCondition);
+            } else {
+                Object.assign(whereClause, dateCondition);
+            }
         } else if (end_date) {
-            whereClause.createdAt = { [Op.lte]: new Date(end_date) };
+            const dateCondition = { createdAt: { [Op.lte]: new Date(end_date) } };
+            if (whereClause[Op.and]) {
+                whereClause[Op.and].push(dateCondition);
+            } else {
+                Object.assign(whereClause, dateCondition);
+            }
         }
 
         // Build include models
@@ -173,48 +213,46 @@ const listDocuments = async (req, res) => {
             }
         ];
 
-        // Handle tag filtering
-        let query = Document.findAndCountAll({
+        // Tag Filter Logic - Add to include models
+        if (tag_id) {
+            // When filtering by tag, require the tag association (inner join)
+            includeModels.push({
+                model: Tag,
+                as: 'tags',
+                where: { id: tag_id },
+                through: { attributes: [] },
+                required: true // Inner join to enforce filter
+            });
+        } else {
+            // When not filtering by tag, include tags for display (left join)
+            includeModels.push({
+                model: Tag,
+                as: 'tags',
+                through: { attributes: [] },
+                required: false // Left join to just show tags
+            });
+        }
+
+        const queryOptions = {
             where: whereClause,
             include: includeModels,
             limit: parseInt(limit),
             offset: parseInt(offset),
             order: [['createdAt', 'DESC']],
-            distinct: true
-        });
+            distinct: true, // Important for correct count with associations
+            subQuery: false // Prevent Sequelize from creating incorrect subqueries with complex OR conditions
+        };
 
-        // If tag_id is provided, we need a separate approach with subquery
+        // Debug logging for tag filtering
         if (tag_id) {
-            query = Document.findAndCountAll({
-                where: whereClause,
-                include: [
-                    ...includeModels,
-                    {
-                        model: Tag,
-                        as: 'tags',
-                        where: { id: tag_id },
-                        through: { attributes: [] },
-                        required: true
-                    }
-                ],
-                limit: parseInt(limit),
-                offset: parseInt(offset),
-                order: [['createdAt', 'DESC']],
-                distinct: true,
-                subQuery: false
-            });
-        } else {
-            query = Document.findAndCountAll({
-                where: whereClause,
-                include: includeModels,
-                limit: parseInt(limit),
-                offset: parseInt(offset),
-                order: [['createdAt', 'DESC']],
-                distinct: true
+            console.log('[DEBUG] Tag Filter Applied:', {
+                tagId: tag_id,
+                whereClause,
+                includeModelsCount: includeModels.length
             });
         }
 
-        const { count, rows } = await query;
+        const { count, rows } = await Document.findAndCountAll(queryOptions);
 
         res.status(200).json({
             data: rows,

@@ -24,7 +24,6 @@ const DocumentsPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [deptFilter, setDeptFilter] = useState('');
     const [creatorFilter, setCreatorFilter] = useState('');
-    const [tagFilter, setTagFilter] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [showAdvanced, setShowAdvanced] = useState(false);
@@ -49,9 +48,14 @@ const DocumentsPage = () => {
                     api.get('/tags'),
                     api.get('/users')
                 ]);
-                setDepartments(deptRes.data);
-                setTags(tagRes.data);
-                setUsers(userRes.data || []);
+                // Handle different response formats
+                const deptData = Array.isArray(deptRes.data) ? deptRes.data : (deptRes.data?.data || []);
+                const tagData = Array.isArray(tagRes.data) ? tagRes.data : (tagRes.data?.data || []);
+                const userData = Array.isArray(userRes.data) ? userRes.data : (userRes.data?.data || []);
+
+                setDepartments(deptData);
+                setTags(tagData);
+                setUsers(userData);
             } catch (err) {
                 console.error("Fetch Metadata Error:", err);
             }
@@ -67,7 +71,6 @@ const DocumentsPage = () => {
                     search: searchTerm,
                     department_id: deptFilter,
                     creator_id: creatorFilter,
-                    tag_id: tagFilter,
                     start_date: startDate,
                     end_date: endDate,
                     is_archived: showArchived,
@@ -89,7 +92,7 @@ const DocumentsPage = () => {
             fetchDocuments(1);
         }, 500);
         return () => clearTimeout(delaySearch);
-    }, [searchTerm, deptFilter, creatorFilter, tagFilter, startDate, endDate, showArchived]);
+    }, [searchTerm, deptFilter, creatorFilter, startDate, endDate, showArchived]);
 
     const handleViewDocument = (docId) => {
         setSelectedDocId(docId);
@@ -194,18 +197,7 @@ const DocumentsPage = () => {
                             ))}
                         </select>
                     </div>
-                    <div>
-                        <select
-                            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-sm focus:border-hospital-500 focus:ring-hospital-500"
-                            value={tagFilter}
-                            onChange={(e) => setTagFilter(e.target.value)}
-                        >
-                            <option value="">{t('tags_placeholder')}</option>
-                            {tags.map((tag) => (
-                                <option key={tag.id} value={tag.id}>{tag.name}</option>
-                            ))}
-                        </select>
-                    </div>
+
                     <button
                         onClick={() => setShowAdvanced(!showAdvanced)}
                         className={`flex items-center justify-center space-x-2 rounded-xl border py-2 px-4 text-sm font-medium transition-colors ${showAdvanced ? 'bg-hospital-50 border-hospital-200 text-hospital-600' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}
@@ -221,13 +213,13 @@ const DocumentsPage = () => {
                         <div className="md:col-span-1">
                             <label className="block text-xs font-bold text-slate-400 uppercase mb-1 px-1">{t('creator')}</label>
                             <select
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-sm focus:border-hospital-500 focus:ring-hospital-500"
+                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-sm text-slate-700 focus:border-hospital-500 focus:ring-hospital-500"
                                 value={creatorFilter}
                                 onChange={(e) => setCreatorFilter(e.target.value)}
                             >
                                 <option value="">{t('all_users')}</option>
                                 {users.map((u) => (
-                                    <option key={u.id} value={u.id}>{u.full_name}</option>
+                                    <option key={u.id} value={u.id}>{u.fullName}</option>
                                 ))}
                             </select>
                         </div>
@@ -253,7 +245,6 @@ const DocumentsPage = () => {
                             <button
                                 onClick={() => {
                                     setCreatorFilter('');
-                                    setTagFilter('');
                                     setStartDate('');
                                     setEndDate('');
                                     setDeptFilter('');

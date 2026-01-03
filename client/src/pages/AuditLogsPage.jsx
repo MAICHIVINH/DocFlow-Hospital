@@ -186,7 +186,7 @@ const AuditLogsPage = () => {
                                                     <User className="h-4 w-4" />
                                                 </div>
                                                 <div className="text-sm">
-                                                    <p className="font-bold text-slate-700">{log.user?.full_name || t('system_user')}</p>
+                                                    <p className="font-bold text-slate-700">{log.user?.fullName || t('system_user')}</p>
                                                     <p className="text-[10px] text-slate-400">@{log.user?.username || 'system'}</p>
                                                 </div>
                                             </div>
@@ -209,7 +209,7 @@ const AuditLogsPage = () => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-sm text-slate-400 font-mono">
-                                            {log.ip_address || '0.0.0.0'}
+                                            {log.ipAddress || '0.0.0.0'}
                                         </td>
                                     </tr>
                                 ))

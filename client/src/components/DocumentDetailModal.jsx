@@ -103,10 +103,10 @@ const DocumentDetailModal = ({ isOpen, onClose, documentId, onDelete }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-900/50 backdrop-blur-sm p-4">
-            <div className="w-full max-w-3xl rounded-2xl bg-white shadow-2xl transition-all">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+            <div className="w-full max-w-3xl rounded-2xl bg-white shadow-2xl transition-all max-h-[90vh] flex flex-col">
                 {/* Header */}
-                <div className="flex items-center justify-between border-b border-slate-100 p-6">
+                <div className="flex-none flex items-center justify-between border-b border-slate-100 p-6">
                     <h3 className="text-xl font-bold text-slate-800">{t('document_detail')}</h3>
                     <button onClick={onClose} className="rounded-lg p-2 text-slate-400 hover:bg-slate-100">
                         <X className="h-5 w-5" />
@@ -114,7 +114,7 @@ const DocumentDetailModal = ({ isOpen, onClose, documentId, onDelete }) => {
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-6 overflow-y-auto">
                     {loading ? (
                         <div className="py-20 text-center text-slate-400">{t('loading')}</div>
                     ) : error ? (
