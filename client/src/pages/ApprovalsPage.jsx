@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import DocumentDetailModal from '../components/DocumentDetailModal';
 
 const ApprovalsPage = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [approvals, setApprovals] = useState([]);
     const [loading, setLoading] = useState(true);
     const [processingId, setProcessingId] = useState(null);
@@ -120,7 +120,7 @@ const ApprovalsPage = () => {
                                     <div>
                                         <h3 className="text-lg font-bold text-slate-800">{doc.title}</h3>
                                         <div className="mt-2 flex flex-wrap gap-4 text-sm text-slate-500">
-                                            <span className="flex items-center"><User className="mr-1.5 h-4 w-4" /> {doc.creator?.full_name || t('na')}</span>
+                                            <span className="flex items-center"><User className="mr-1.5 h-4 w-4" /> {doc.creator?.fullName || t('na')}</span>
                                             <span className="flex items-center"><Calendar className="mr-1.5 h-4 w-4" /> {new Date(doc.created_at).toLocaleDateString(i18n.language === 'vi' ? 'vi-VN' : 'en-US')}</span>
                                             <span className="flex items-center"><Activity className="mr-1.5 h-4 w-4" /> {doc.department?.name || t('unknown')}</span>
                                         </div>

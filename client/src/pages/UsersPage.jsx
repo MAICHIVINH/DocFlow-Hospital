@@ -61,7 +61,7 @@ const UsersPage = () => {
             setFormData({
                 username: user.username,
                 password: '', // Don't show password
-                full_name: user.full_name,
+                full_name: user.fullName || user.full_name,
                 role: user.role,
                 department_id: user.department_id,
                 status: user.status

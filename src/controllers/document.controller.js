@@ -1,5 +1,6 @@
-const cloudinary = require('../config/cloudinary.config');
-const streamifier = require('streamifier');
+const { minioClient, bucketName } = require('../config/minio.config');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 const db = require('../models');
 const { Document, DocumentVersion, User, Department, Tag, sequelize } = db;
 const { Op } = require('sequelize');
@@ -29,24 +30,23 @@ const checkDocumentAccess = async (userId, userRole, userDeptId, documentId) => 
 };
 
 /**
- * Helper function to upload buffer to Cloudinary
+ * Helper function to upload buffer to MinIO
  */
-const uploadToCloudinary = (fileBuffer, folder) => {
-    return new Promise((resolve, reject) => {
-        const cld_upload_stream = cloudinary.uploader.upload_stream(
-            {
-                folder: folder,
-                resource_type: "auto",
-                type: "upload", // public upload instead of private
-                access_mode: "public" // ensure public access
-            },
-            (error, result) => {
-                if (result) resolve(result);
-                else reject(error);
-            }
-        );
-        streamifier.createReadStream(fileBuffer).pipe(cld_upload_stream);
-    });
+const uploadToMinIO = async (fileBuffer, originalName, contentType) => {
+    const extension = path.extname(originalName);
+    const fileName = `${uuidv4()}${extension}`;
+    const objectName = `documents/${fileName}`;
+
+    const metaData = {
+        'Content-Type': contentType
+    };
+
+    await minioClient.putObject(bucketName, objectName, fileBuffer, fileBuffer.length, metaData);
+
+    return {
+        secure_url: objectName,
+        public_id: objectName
+    };
 };
 
 const uploadDocument = async (req, res) => {
@@ -58,8 +58,8 @@ const uploadDocument = async (req, res) => {
 
         const { title, description, department_id, visibility = 'DEPARTMENT' } = req.body;
 
-        // 1. Upload to Cloudinary
-        const result = await uploadToCloudinary(req.file.buffer, 'hospital-docs');
+        // 1. Upload to MinIO
+        const result = await uploadToMinIO(req.file.buffer, req.file.originalname, req.file.mimetype);
 
         // 2. Create Document record
         const newDoc = await Document.create({
@@ -108,6 +108,25 @@ const listDocuments = async (req, res) => {
         const offset = (page - 1) * limit;
 
         const whereClause = {};
+
+        // 1. Role-based Access Control (Enforce Visibility)
+        if (req.userRole !== 'ADMIN') {
+            whereClause[Op.and] = [
+                {
+                    [Op.or]: [
+                        { visibility: 'PUBLIC' },
+                        {
+                            visibility: 'DEPARTMENT',
+                            departmentId: req.userDeptId
+                        },
+                        {
+                            visibility: 'PRIVATE',
+                            creatorId: req.userId
+                        }
+                    ]
+                }
+            ];
+        }
         if (is_archived === 'true') {
             whereClause.isArchived = true;
         } else {
@@ -334,19 +353,20 @@ const downloadDocument = async (req, res) => {
             console.error('Audit error:', auditError);
         }
 
-        // Extract public_id from Cloudinary URL for proxy
-        const cloudinaryUrl = doc.currentVersion.fileUrl;
-        const publicIdMatch = cloudinaryUrl.match(/\/upload\/(?:v\d+\/)?(.+)\.\w+$/);
-        const publicId = publicIdMatch ? publicIdMatch[1] : 'unknown';
+        // For MinIO, we store the object path in fileUrl
+        const objectPath = doc.currentVersion.fileUrl;
 
-        // Return proxy URL for preview and original URL for download
-        const proxyUrl = `${req.protocol}://${req.get('host')}/api/proxy/file/${encodeURIComponent(publicId)}`;
+        // Return proxy URL for preview and a direct signed URL for download if possible
+        // For simplicity, we'll use the proxy for both or generate a signed URL here
+        const expiry = 24 * 60 * 60; // 24 hours
+        const downloadUrl = await minioClient.presignedGetObject(bucketName, objectPath, expiry);
+        const proxyUrl = `${req.protocol}://${req.get('host')}/api/proxy/file/${encodeURIComponent(objectPath)}`;
 
         res.status(200).json({
-            downloadUrl: cloudinaryUrl,
+            downloadUrl: downloadUrl,
             proxyUrl: proxyUrl,
             fileName: doc.title,
-            fileType: doc.currentVersion.file_type
+            fileType: doc.currentVersion.fileType
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -431,8 +451,8 @@ const createNewVersion = async (req, res) => {
         const doc = await Document.findByPk(id);
         if (!doc) return res.status(404).json({ message: 'Document not found' });
 
-        // Upload to Cloudinary
-        const result = await uploadToCloudinary(req.file.buffer, 'hospital-docs');
+        // Upload to MinIO
+        const result = await uploadToMinIO(req.file.buffer, req.file.originalname, req.file.mimetype);
 
         // Get latest version number
         const latestVersion = await DocumentVersion.findOne({

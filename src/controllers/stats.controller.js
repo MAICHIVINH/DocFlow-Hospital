@@ -2,6 +2,36 @@ const db = require('../models');
 const { Document, Department, AuditLog, User, sequelize } = db;
 const { Op } = require('sequelize');
 
+/**
+ * Helper to build accessibility where clause based on user role
+ */
+const getAccessibilityClause = (req) => {
+    console.log('[DEBUG] Stats Access Check:', {
+        role: req.userRole,
+        deptId: req.userDeptId,
+        userId: req.userId
+    });
+
+    if (req.userRole === 'ADMIN') return {};
+
+    return {
+        [Op.or]: [
+            { visibility: 'PUBLIC' },
+            {
+                visibility: 'DEPARTMENT',
+                departmentId: req.userDeptId
+            },
+            {
+                visibility: 'DEPARTMENT',
+                departmentId: req.userDeptId
+            },
+            {
+                creatorId: req.userId
+            }
+        ]
+    };
+};
+
 const getDocumentStatsByDept = async (req, res) => {
     try {
         const { startDate, endDate } = req.query;
@@ -9,6 +39,10 @@ const getDocumentStatsByDept = async (req, res) => {
         if (startDate && endDate) {
             where.createdAt = { [Op.between]: [new Date(startDate), new Date(endDate)] };
         }
+
+        // Apply Visibility Filter
+        const accessClause = getAccessibilityClause(req);
+        Object.assign(where, accessClause);
 
         const stats = await Document.findAll({
             attributes: [
@@ -46,6 +80,10 @@ const getUsageStats = async (req, res) => {
         if (startDate && endDate) {
             where.createdAt = { [Op.between]: [new Date(startDate), new Date(endDate)] };
         }
+
+        // Apply Visibility Filter
+        const accessClause = getAccessibilityClause(req);
+        Object.assign(where, accessClause);
 
         const totalDocs = await Document.count({ where });
         const pendingDocs = await Document.count({ where: { ...where, status: 'PENDING' } });
@@ -85,7 +123,8 @@ const getMonthlyStats = async (req, res) => {
                 [sequelize.fn('COUNT', sequelize.col('Document.id')), 'count']
             ],
             where: {
-                createdAt: { [Op.gte]: sixMonthsAgo }
+                createdAt: { [Op.gte]: sixMonthsAgo },
+                ...getAccessibilityClause(req)
             },
             group: [sequelize.fn('DATE_TRUNC', 'month', sequelize.col('Document.created_at'))],
             order: [[sequelize.fn('DATE_TRUNC', 'month', sequelize.col('Document.created_at')), 'ASC']],
@@ -153,6 +192,10 @@ const getTagStats = async (req, res) => {
             where.createdAt = { [Op.between]: [new Date(startDate), new Date(endDate)] };
         }
 
+        // Apply Visibility Filter
+        const accessClause = getAccessibilityClause(req);
+        Object.assign(where, accessClause);
+
         const stats = await db.Tag.findAll({
             attributes: [
                 'name',
@@ -187,6 +230,10 @@ const getUserContributionStats = async (req, res) => {
         if (startDate && endDate) {
             where.createdAt = { [Op.between]: [new Date(startDate), new Date(endDate)] };
         }
+
+        // Apply Visibility Filter
+        const accessClause = getAccessibilityClause(req);
+        Object.assign(where, accessClause);
 
         const stats = await User.findAll({
             attributes: [
@@ -228,6 +275,7 @@ const exportDocumentsToExcel = async (req, res) => {
                 { model: User, as: 'creator', attributes: ['fullName'] },
                 { model: Department, as: 'department', attributes: ['name'] }
             ],
+            where: getAccessibilityClause(req),
             order: [['createdAt', 'DESC']]
         });
 
@@ -375,6 +423,7 @@ const exportDocumentsToPDF = async (req, res) => {
                 { model: User, as: 'creator', attributes: ['full_name'] },
                 { model: Department, as: 'department', attributes: ['name'] }
             ],
+            where: getAccessibilityClause(req),
             order: [['createdAt', 'DESC']]
         });
 

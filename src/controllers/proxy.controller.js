@@ -1,49 +1,27 @@
-const cloudinary = require('../config/cloudinary.config');
-const axios = require('axios');
+const { minioClient, bucketName } = require('../config/minio.config');
 
 /**
- * Proxy endpoint to serve files from Cloudinary
- * This allows frontend to display PDFs in iframe without 401 errors
+ * Proxy endpoint to serve files from MinIO
+ * This allows frontend to display PDFs in iframe without CORS issues
  */
 const proxyFile = async (req, res) => {
     try {
         const { publicId } = req.params;
-        const decodedPublicId = decodeURIComponent(publicId);
+        const objectPath = decodeURIComponent(publicId);
 
-        // 1. Get authoritative details from Cloudinary Admin API
-        // This is the source of truth for the file's location and type
-        const resource = await cloudinary.api.resource(decodedPublicId);
+        // Get object metadata to find content type
+        const stat = await minioClient.statObject(bucketName, objectPath);
 
-        console.log(`[PROXY] Resource found: type=${resource.type}, resource_type=${resource.resource_type}, format=${resource.format}`);
+        // Set headers for inline preview
+        res.setHeader('Content-Type', stat.metaData['content-type'] || 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline');
 
-        // 2. Use the secure_url provided by Cloudinary
-        // We ALWAYS re-generate a signed URL to be safe
-        // This handles cases where 'upload' type might still have access restrictions
-        // or if the frontend needs a temporary access token
-        let targetUrl = cloudinary.url(decodedPublicId, {
-            resource_type: resource.resource_type,
-            type: resource.type,
-            format: resource.format,
-            sign_url: true,
-            secure: true,
-            expires_at: Math.floor(Date.now() / 1000) + 3600 // 1 hour validity
-        });
-
-        console.log(`[PROXY] Returning URL: ${targetUrl}`);
-
-        // Return URL for frontend to use in iframe directly
-        // This avoids axios blob fetching network issues
-        return res.json({ url: targetUrl });
+        // Stream the data directly to the response
+        const dataStream = await minioClient.getObject(bucketName, objectPath);
+        dataStream.pipe(res);
 
     } catch (error) {
         console.error('[PROXY] Error:', error.message);
-        if (error.response) {
-            console.error('[PROXY] Upstream error:', error.response.status, error.response.statusText);
-        } else if (error.error && error.error.http_code) {
-            // Cloudinary API error
-            console.error('[PROXY] Cloudinary API error:', error.error.message);
-        }
-
         res.status(500).json({ message: 'Failed to proxy file', details: error.message });
     }
 };

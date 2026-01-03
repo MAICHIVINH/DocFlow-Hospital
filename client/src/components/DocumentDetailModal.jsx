@@ -27,14 +27,13 @@ const DocumentDetailModal = ({ isOpen, onClose, documentId, onDelete }) => {
             const res = await api.get(`/documents/${documentId}`);
             setDocument(res.data);
 
-            // Fetch proxy URL for PDF preview
+            // Set proxy URL for PDF preview
             if (res.data.currentVersion?.fileType?.includes('pdf')) {
                 const downloadRes = await api.get(`/documents/${documentId}/download`);
-                const proxyEndpoint = downloadRes.data.proxyUrl;
-
-                // Call proxy endpoint to get the real secure URL
-                const realUrlRes = await api.get(proxyEndpoint);
-                setProxyUrl(realUrlRes.data.url);
+                // Use the proxy URL directly as the iframe source
+                // Append token for authentication
+                const token = user?.accessToken || localStorage.getItem('token');
+                setProxyUrl(`${downloadRes.data.proxyUrl}?token=${token}`);
             }
         } catch (err) {
             setError(err.response?.data?.message || t('error_loading_detail'));

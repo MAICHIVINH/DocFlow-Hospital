@@ -11,7 +11,7 @@ Hãy đảm bảo máy tính của bạn đã cài đặt các công cụ sau:
 *   **Node.js**: Phiên bản >= 18.0 (Tải tại: [nodejs.org](https://nodejs.org/))
 *   **npm**: Phiên bản >= 9.0 (Thường đi kèm với Node.js)
 *   **PostgreSQL**: Phiên bản >= 14.0 (Tải tại: [postgresql.org](https://www.postgresql.org/download/windows/))
-*   **Tài khoản Cloudinary**: Để lưu trữ file trực tuyến (Đăng ký miễn phí tại: [cloudinary.com](https://cloudinary.com/))
+*   **Docker Desktop**: Để chạy MinIO (Tải tại: [docker.com](https://www.docker.com/products/docker-desktop/))
 *   **Git**: Để quản lý mã nguồn.
 
 ---
@@ -42,10 +42,13 @@ DB_PASSWORD=your_password_here
 # JWT Security
 JWT_SECRET=your_jwt_secret_key_123
 
-# Cloudinary Credentials
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+# MinIO Configuration
+MINIO_ENDPOINT=localhost
+MINIO_PORT=9000
+MINIO_ACCESS_KEY=admin
+MINIO_SECRET_KEY=password123
+MINIO_BUCKET=hospital-docs
+MINIO_USE_SSL=false
 ```
 
 ---
@@ -54,7 +57,13 @@ CLOUDINARY_API_SECRET=your_api_secret
 
 Mở terminal (PowerShell hoặc CMD) tại thư mục `DocFlow-Hospital` và thực hiện các bước:
 
-### Bước 1: Cài đặt Backend
+### Bước 1: Khởi động MinIO (Docker)
+```bash
+docker-compose up -d
+```
+MinIO Console sẽ có tại: `http://localhost:9001` (User: `admin`, Pass: `password123`)
+
+### Bước 2: Cài đặt Backend
 ```bash
 # Cài đặt thư viện
 npm install
@@ -95,7 +104,7 @@ Sau khi chạy lệnh `seed`, bạn có thể sử dụng tài khoản Admin sau
 ## 🛠️ Trợ giúp (Troubleshooting)
 
 - **Lỗi kết nối DB:** Kiểm tra lại file `.env` xem `DB_PASSWORD` và `DB_NAME` đã chính xác chưa.
-- **Lỗi Upload file:** Đảm bảo `CLOUDINARY` credentials trong file `.env` đã đúng.
+- **Lỗi Upload file:** Đảm bảo Docker đã chạy và container MinIO đã khởi động (`docker ps`).
 - **Port bị chiếm:** Nếu port 3000 hoặc 5000 đã có ứng dụng khác dùng, bạn có thể đổi trong `vite.config.js` hoặc `server.js`.
 
 ---
