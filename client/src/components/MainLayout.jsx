@@ -31,7 +31,7 @@ const SidebarItem = ({ to, icon: Icon, label }) => (
         className={({ isActive }) =>
             `flex items-center space-x-3 rounded-xl px-4 py-3 transition-all duration-200 ${isActive
                 ? 'bg-hospital-600 text-white shadow-lg shadow-hospital-200'
-                : 'text-slate-600 hover:bg-hospital-50 hover:text-hospital-600'
+                : 'text-theme-secondary hover:bg-theme-primary hover:text-hospital-600'
             }`
         }
     >
@@ -143,7 +143,7 @@ const MainLayout = ({ children }) => {
                             </div>
                             <span className="text-2xl font-black tracking-tight text-theme-primary">DocFlow</span>
                         </div>
-                        <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-slate-400 hover:text-slate-600">
+                        <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-theme-secondary hover:text-theme-primary">
                             <X className="h-6 w-6" />
                         </button>
                     </div>
@@ -151,7 +151,7 @@ const MainLayout = ({ children }) => {
                     {/* Navigation */}
                     <nav className="flex-1 space-y-6 px-4 overflow-y-auto custom-scrollbar">
                         <div>
-                            <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">{t('summary')}</p>
+                            <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-theme-secondary/50 mb-3">{t('summary')}</p>
                             <div className="space-y-1">
                                 <SidebarItem to="/" icon={LayoutDashboard} label={t('dashboard')} />
                                 <SidebarItem to="/docs" icon={FileText} label={t('documents')} />
@@ -163,7 +163,7 @@ const MainLayout = ({ children }) => {
                         </div>
 
                         <div>
-                            <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">{t('audit_logs')}</p>
+                            <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-theme-secondary/50 mb-3">{t('audit_logs')}</p>
                             <div className="space-y-1">
                                 <SidebarItem to="/stats" icon={BarChart3} label={t('stats')} />
                                 {(user?.role === 'ADMIN' || user?.role === 'MANAGER') && (
@@ -174,7 +174,7 @@ const MainLayout = ({ children }) => {
 
                         {user?.role === 'ADMIN' && (
                             <div>
-                                <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">{t('users')}</p>
+                                <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-theme-secondary/50 mb-3">{t('users')}</p>
                                 <div className="space-y-1">
                                     <SidebarItem to="/users" icon={Users} label={t('users')} />
                                     <SidebarItem to="/departments" icon={Layers} label={t('departments')} />
@@ -186,10 +186,10 @@ const MainLayout = ({ children }) => {
                     </nav>
 
                     {/* Sidebar Footer */}
-                    <div className="p-4 border-t border-slate-50">
+                    <div className="p-4 border-t border-theme">
                         <button
                             onClick={handleLogout}
-                            className="flex w-full items-center space-x-3 rounded-xl px-4 py-3 text-red-600 transition-colors hover:bg-red-50 font-medium"
+                            className="flex w-full items-center space-x-3 rounded-xl px-4 py-3 text-red-500 transition-colors hover:bg-red-500/10 font-medium"
                         >
                             <LogOut className="h-5 w-5" />
                             <span>{t('logout')}</span>
@@ -203,7 +203,7 @@ const MainLayout = ({ children }) => {
                 {/* Header */}
                 <header className="flex h-16 items-center justify-between border-b border-theme bg-theme-secondary px-6">
                     <button
-                        className="lg:hidden text-slate-600"
+                        className="lg:hidden text-theme-secondary"
                         onClick={() => setSidebarOpen(!sidebarOpen)}
                     >
                         {sidebarOpen ? <X /> : <Menu />}
@@ -218,13 +218,13 @@ const MainLayout = ({ children }) => {
                         <div className="flex items-center bg-theme-input rounded-lg p-1">
                             <button
                                 onClick={() => i18n.changeLanguage('vi')}
-                                className={`px-2 py-1 text-[10px] font-bold rounded-md transition-all ${i18n.language === 'vi' ? 'bg-theme-secondary text-hospital-600 shadow-sm' : 'text-slate-400'}`}
+                                className={`px-2 py-1 text-[10px] font-bold rounded-md transition-all ${i18n.language === 'vi' ? 'bg-theme-secondary text-hospital-600 shadow-sm' : 'text-theme-secondary/50'}`}
                             >
                                 VI
                             </button>
                             <button
                                 onClick={() => i18n.changeLanguage('en')}
-                                className={`px-2 py-1 text-[10px] font-bold rounded-md transition-all ${i18n.language === 'en' ? 'bg-theme-secondary text-hospital-600 shadow-sm' : 'text-slate-400'}`}
+                                className={`px-2 py-1 text-[10px] font-bold rounded-md transition-all ${i18n.language === 'en' ? 'bg-theme-secondary text-hospital-600 shadow-sm' : 'text-theme-secondary/50'}`}
                             >
                                 EN
                             </button>
@@ -233,7 +233,7 @@ const MainLayout = ({ children }) => {
                         {/* Theme Toggle */}
                         <button
                             onClick={toggleTheme}
-                            className="p-2 rounded-xl text-slate-400 hover:bg-theme-input hover:text-hospital-600 transition-all"
+                            className="p-2 rounded-xl text-theme-secondary hover:bg-theme-input hover:text-hospital-600 transition-all"
                             title={isDarkMode ? "Light Mode" : "Dark Mode"}
                         >
                             {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -242,7 +242,7 @@ const MainLayout = ({ children }) => {
                         <div className="relative">
                             <button
                                 onClick={() => setNotifOpen(!notifOpen)}
-                                className="relative text-slate-400 hover:text-hospital-600 transition-colors mt-2"
+                                className="relative text-theme-secondary hover:text-hospital-600 transition-colors mt-2"
                             >
                                 <Bell className="h-6 w-6" />
                                 {unreadCount > 0 && (
@@ -257,30 +257,30 @@ const MainLayout = ({ children }) => {
                                 <div className="absolute right-0 mt-4 w-80 rounded-2xl bg-theme-secondary shadow-2xl ring-1 ring-black ring-opacity-5 z-[60] border border-theme">
                                     <div className="p-4 border-b border-theme flex items-center justify-between">
                                         <h4 className="font-bold text-theme-primary">{t('notifications')}</h4>
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-hospital-600 bg-hospital-50 px-2 py-0.5 rounded-full">
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-hospital-600 bg-hospital-500/10 px-2 py-0.5 rounded-full">
                                             {t('new')}
                                         </span>
                                     </div>
                                     <div className="max-h-96 overflow-y-auto">
                                         {notifications.length === 0 ? (
-                                            <div className="p-8 text-center text-slate-400 text-sm">{t('no_notifications')}</div>
+                                            <div className="p-8 text-center text-theme-secondary/50 text-sm">{t('no_notifications')}</div>
                                         ) : (
                                             notifications.map(n => (
                                                 <div
                                                     key={n.id}
                                                     onClick={() => !n.is_read && handleMarkAsRead(n.id)}
-                                                    className={`p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors cursor-pointer ${!n.is_read ? 'bg-hospital-50/30' : ''}`}
+                                                    className={`p-4 border-b border-theme hover:bg-theme-primary transition-colors cursor-pointer ${!n.is_read ? 'bg-hospital-500/5' : ''}`}
                                                 >
-                                                    <p className={`text-sm ${!n.is_read ? 'font-bold text-slate-800' : 'text-slate-600'}`}>{n.title}</p>
-                                                    <p className="text-xs text-slate-500 mt-1 line-clamp-2">{n.content}</p>
-                                                    <p className="text-[10px] text-slate-400 mt-2">
+                                                    <p className={`text-sm ${!n.is_read ? 'font-bold text-theme-primary' : 'text-theme-secondary'}`}>{n.title}</p>
+                                                    <p className="text-xs text-theme-secondary/70 mt-1 line-clamp-2">{n.content}</p>
+                                                    <p className="text-[10px] text-theme-secondary/40 mt-2">
                                                         {new Date(n.created_at || n.createdAt).toLocaleString(i18n.language === 'vi' ? 'vi-VN' : 'en-US')}
                                                     </p>
                                                 </div>
                                             ))
                                         )}
                                     </div>
-                                    <div className="p-3 text-center border-t border-slate-50">
+                                    <div className="p-3 text-center border-t border-theme">
                                         <button
                                             onClick={() => {
                                                 navigate('/notifications');
@@ -301,7 +301,7 @@ const MainLayout = ({ children }) => {
                                     <p className="font-bold text-theme-primary leading-tight">{user?.full_name}</p>
                                     <p className="text-xs text-theme-secondary font-medium uppercase tracking-tighter">{user?.role}</p>
                                 </div>
-                                <div className="rounded-full bg-hospital-100 p-2">
+                                <div className="rounded-full bg-hospital-500/10 p-2">
                                     <UserIcon className="h-5 w-5 text-hospital-600" />
                                 </div>
                             </div>
@@ -318,7 +318,7 @@ const MainLayout = ({ children }) => {
                                     </button>
                                     <button
                                         onClick={handleLogout}
-                                        className="flex w-full items-center space-x-2 rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-slate-50 mt-1 pt-2"
+                                        className="flex w-full items-center space-x-2 rounded-lg px-3 py-2 text-sm text-red-500 hover:bg-red-500/10 transition-colors border-t border-theme mt-1 pt-2"
                                     >
                                         <LogOut className="h-4 w-4" />
                                         <span>{t('logout')}</span>

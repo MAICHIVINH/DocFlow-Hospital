@@ -95,11 +95,11 @@ const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-900/50 backdrop-blur-sm p-4">
-            <div className="w-full max-w-2xl rounded-2xl bg-white shadow-2xl transition-all">
-                <div className="flex items-center justify-between border-b border-slate-100 p-6">
-                    <h3 className="text-xl font-bold text-slate-800">{t('upload_new_doc')}</h3>
-                    <button onClick={onClose} className="rounded-lg p-2 text-slate-400 hover:bg-slate-100">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-900/60 backdrop-blur-sm p-4 text-theme-primary transition-all">
+            <div className="w-full max-w-2xl rounded-2xl bg-theme-secondary shadow-2xl transition-all border border-theme">
+                <div className="flex items-center justify-between border-b border-theme p-6">
+                    <h3 className="text-xl font-bold text-theme-primary">{t('upload_new_doc')}</h3>
+                    <button onClick={onClose} className="rounded-lg p-2 text-theme-secondary hover:bg-theme-primary transition-colors">
                         <X className="h-5 w-5" />
                     </button>
                 </div>
@@ -114,10 +114,10 @@ const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
 
                     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-slate-700">{t('document_title')}</label>
+                            <label className="text-sm font-semibold text-theme-secondary">{t('document_title')}</label>
                             <input
                                 type="text"
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-4 text-sm focus:ring-2 focus:ring-hospital-500"
+                                className="w-full rounded-xl border border-theme bg-theme-primary py-2.5 px-4 text-sm focus:ring-2 focus:ring-hospital-500 text-theme-primary outline-none"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder={t('title_placeholder')}
@@ -125,9 +125,9 @@ const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-slate-700">{t('relevant_dept')}</label>
+                            <label className="text-sm font-semibold text-theme-secondary">{t('relevant_dept')}</label>
                             <select
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-4 text-sm focus:ring-2 focus:ring-hospital-500"
+                                className="w-full rounded-xl border border-theme bg-theme-primary py-2.5 px-4 text-sm focus:ring-2 focus:ring-hospital-500 text-theme-primary outline-none"
                                 value={departmentId}
                                 onChange={(e) => setDepartmentId(e.target.value)}
                             >
@@ -140,10 +140,10 @@ const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-slate-700">{t('detailed_desc')}</label>
+                        <label className="text-sm font-semibold text-theme-secondary">{t('detailed_desc')}</label>
                         <textarea
                             rows="3"
-                            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-4 text-sm focus:ring-2 focus:ring-hospital-500"
+                            className="w-full rounded-xl border border-theme bg-theme-primary py-2.5 px-4 text-sm focus:ring-2 focus:ring-hospital-500 text-theme-primary outline-none"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder={t('desc_placeholder')}
@@ -152,9 +152,9 @@ const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
 
                     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-slate-700">{t('visibility_scope')}</label>
+                            <label className="text-sm font-semibold text-theme-secondary">{t('visibility_scope')}</label>
                             <select
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-4 text-sm focus:ring-2 focus:ring-hospital-500"
+                                className="w-full rounded-xl border border-theme bg-theme-primary py-2.5 px-4 text-sm focus:ring-2 focus:ring-hospital-500 text-theme-primary outline-none"
                                 value={visibility}
                                 onChange={(e) => setVisibility(e.target.value)}
                             >
@@ -182,8 +182,8 @@ const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
                                                 }
                                             }}
                                             className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${selectedTags.includes(tag.name)
-                                                ? 'bg-hospital-100 border-hospital-300 text-hospital-700 shadow-sm'
-                                                : 'bg-white border-slate-200 text-slate-500 hover:border-hospital-200 hover:text-hospital-600'
+                                                ? 'bg-hospital-500/10 border-hospital-500/30 text-hospital-600 shadow-sm'
+                                                : 'bg-theme-secondary border-theme text-theme-secondary hover:border-hospital-500/30 hover:text-hospital-600'
                                                 }`}
                                         >
                                             #{tag.name}
@@ -195,12 +195,12 @@ const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-slate-700">{t('attachment_files')}</label>
-                        <div className="relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-8 transition-all hover:bg-slate-100/50">
+                        <label className="text-sm font-semibold text-theme-secondary">{t('attachment_files')}</label>
+                        <div className="relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-theme bg-theme-primary p-8 transition-all hover:bg-theme-secondary">
                             {file ? (
                                 <div className="flex flex-col items-center">
                                     <File className="h-10 w-10 text-hospital-500" />
-                                    <p className="mt-2 text-sm font-medium text-slate-700">{file.name}</p>
+                                    <p className="mt-2 text-sm font-medium text-theme-primary">{file.name}</p>
                                     <button
                                         type="button"
                                         onClick={() => setFile(null)}
@@ -211,8 +211,8 @@ const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
                                 </div>
                             ) : (
                                 <>
-                                    <Upload className="h-10 w-10 text-slate-300" />
-                                    <p className="mt-2 text-sm text-slate-500">{t('drag_drop_placeholder')}</p>
+                                    <Upload className="h-10 w-10 text-theme-secondary opacity-30" />
+                                    <p className="mt-2 text-sm text-theme-secondary">{t('drag_drop_placeholder')}</p>
                                     <input
                                         type="file"
                                         className="absolute inset-0 cursor-pointer opacity-0"
@@ -228,7 +228,7 @@ const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 rounded-xl border border-slate-200 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50"
+                            className="flex-1 rounded-xl border border-theme py-3 text-sm font-bold text-theme-secondary hover:bg-theme-primary transition-colors"
                         >
                             {t('cancel')}
                         </button>

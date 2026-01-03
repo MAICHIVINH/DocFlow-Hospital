@@ -118,7 +118,7 @@ const updateUser = async (req, res) => {
         const user = await User.findByPk(id);
         if (!user) return res.status(404).json({ message: 'Không tìm thấy người dùng.' });
 
-        const updateData = { fullName: full_name, departmentId: department_id, status };
+        const updateData = { fullName: full_name, email, departmentId: department_id, status };
         if (role) {
             const roleRecord = await Role.findOne({ where: { name: role } });
             if (roleRecord) updateData.roleId = roleRecord.id;

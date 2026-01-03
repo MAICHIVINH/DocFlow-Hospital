@@ -101,66 +101,68 @@ const PermissionsPage = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-lg text-gray-600">{t('loading')}</div>
+            <div className="flex items-center justify-center h-screen bg-theme-primary">
+                <div className="text-lg text-theme-secondary animate-pulse">{t('loading')}</div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+        <div className="min-h-screen bg-theme-primary p-6 transition-colors duration-300">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <div className="flex items-center space-x-3 mb-2">
-                        <Shield className="h-8 w-8 text-hospital-600" />
-                        <h1 className="text-3xl font-bold text-slate-800">{t('permission_management')}</h1>
+                    <div className="flex items-center space-x-4 mb-2">
+                        <div className="p-3 bg-hospital-600/10 rounded-2xl">
+                            <Shield className="h-8 w-8 text-hospital-600" />
+                        </div>
+                        <h1 className="text-3xl font-black text-theme-primary tracking-tight">{t('permission_management')}</h1>
                     </div>
-                    <p className="text-slate-600">{t('permission_management_subtitle')}</p>
+                    <p className="text-theme-secondary font-medium">{t('permission_management_subtitle')}</p>
                 </div>
 
                 {/* Warning Alert */}
                 {hasChanges && (
-                    <div className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg flex items-start space-x-3">
+                    <div className="mb-6 p-4 bg-yellow-500/10 border-l-4 border-yellow-500 rounded-r-2xl flex items-start space-x-3 shadow-md shadow-yellow-500/5">
                         <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                         <div>
-                            <p className="font-semibold text-yellow-800">{t('unsaved_changes')}</p>
-                            <p className="text-sm text-yellow-700">{t('unsaved_changes_warning')}</p>
+                            <p className="font-bold text-yellow-700">{t('unsaved_changes')}</p>
+                            <p className="text-sm text-yellow-600/80 font-medium">{t('unsaved_changes_warning')}</p>
                         </div>
                     </div>
                 )}
 
                 {/* Permission Matrix */}
-                <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                    <div className="overflow-x-auto">
+                <div className="bg-theme-secondary rounded-2xl shadow-xl overflow-hidden border border-theme">
+                    <div className="overflow-x-auto custom-scrollbar">
                         <table className="w-full">
-                            <thead className="bg-gradient-to-r from-hospital-600 to-hospital-700 text-white">
+                            <thead className="bg-hospital-600 text-white">
                                 <tr>
-                                    <th className="px-6 py-4 text-left font-semibold sticky left-0 bg-hospital-600 z-10">
+                                    <th className="px-6 py-5 text-left font-bold uppercase tracking-wider text-xs sticky left-0 bg-hospital-600 z-20">
                                         {t('role')}
                                     </th>
                                     {availablePermissions.map(perm => (
-                                        <th key={perm} className="px-4 py-4 text-center font-medium text-sm">
-                                            <div className="whitespace-nowrap">{perm}</div>
+                                        <th key={perm} className="px-4 py-5 text-center font-bold uppercase tracking-wider text-[10px] whitespace-nowrap">
+                                            {perm}
                                         </th>
                                     ))}
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-200">
+                            <tbody className="divide-y divide-theme">
                                 {roles.map((role, idx) => (
                                     <tr
                                         key={role}
-                                        className={`${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'} hover:bg-hospital-50 transition-colors`}
+                                        className={`${idx % 2 === 0 ? 'bg-theme-secondary' : 'bg-table-stripe'} hover:bg-hospital-500/5 transition-colors group text-sm`}
                                     >
-                                        <td className="px-6 py-4 font-semibold text-slate-800 sticky left-0 bg-inherit z-10">
-                                            <div className="flex items-center space-x-2">
-                                                <span className={`inline-block w-3 h-3 rounded-full ${role === 'ADMIN' ? 'bg-red-500' :
-                                                        role === 'MANAGER' ? 'bg-blue-500' :
-                                                            role === 'STAFF' ? 'bg-green-500' :
-                                                                role === 'USER' ? 'bg-yellow-500' :
-                                                                    'bg-gray-500'
+                                        <td className="px-6 py-4 font-bold text-theme-primary sticky left-0 bg-inherit z-10 border-r border-theme shadow-[4px_0_8px_-4px_rgba(0,0,0,0.1)]">
+                                            <div className="flex items-center space-x-3">
+                                                <span className={`inline-block w-2.5 h-2.5 rounded-full ring-2 ring-offset-2 ring-offset-theme-secondary ${role === 'ADMIN' ? 'bg-red-500 ring-red-500/30' :
+                                                    role === 'MANAGER' ? 'bg-blue-500 ring-blue-500/30' :
+                                                        role === 'STAFF' ? 'bg-green-500 ring-green-500/30' :
+                                                            role === 'USER' ? 'bg-yellow-500 ring-yellow-500/30' :
+                                                                'bg-slate-500 ring-slate-500/30'
                                                     }`}></span>
-                                                <span>{role}</span>
+                                                <span className="tracking-wide">{role}</span>
                                             </div>
                                         </td>
                                         {availablePermissions.map(perm => {
@@ -175,7 +177,7 @@ const PermissionsPage = () => {
                                                         checked={hasPermission}
                                                         disabled={isWildcard && perm !== '*'}
                                                         onChange={() => handleTogglePermission(role, perm)}
-                                                        className="w-5 h-5 text-hospital-600 rounded focus:ring-hospital-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        className="w-5 h-5 text-hospital-600 rounded-lg border-theme bg-theme-primary focus:ring-hospital-500 focus:ring-offset-theme-secondary cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                                                     />
                                                 </td>
                                             );
@@ -188,11 +190,11 @@ const PermissionsPage = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="mt-6 flex items-center justify-between">
+                <div className="mt-8 flex items-center justify-between">
                     <button
                         onClick={handleResetToDefault}
                         disabled={saving}
-                        className="flex items-center space-x-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center space-x-2 px-6 py-3.5 bg-theme-secondary text-theme-secondary rounded-xl hover:bg-theme-primary border border-theme transition-all disabled:opacity-50 disabled:cursor-not-allowed font-bold shadow-sm"
                     >
                         <RotateCcw className="h-5 w-5" />
                         <span>{t('reset_to_default')}</span>
@@ -201,7 +203,7 @@ const PermissionsPage = () => {
                     <button
                         onClick={handleSaveChanges}
                         disabled={!hasChanges || saving}
-                        className="flex items-center space-x-2 px-8 py-3 bg-hospital-600 text-white rounded-lg hover:bg-hospital-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                        className="flex items-center space-x-2 px-10 py-3.5 bg-hospital-600 text-white rounded-xl hover:bg-hospital-700 transition-all disabled:bg-theme-secondary disabled:text-theme-secondary/30 disabled:cursor-not-allowed shadow-xl shadow-hospital-600/20 font-bold"
                     >
                         <Save className="h-5 w-5" />
                         <span>{saving ? t('saving') : t('save_changes')}</span>
@@ -209,12 +211,24 @@ const PermissionsPage = () => {
                 </div>
 
                 {/* Info Box */}
-                <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h3 className="font-semibold text-blue-900 mb-2">{t('permission_info_title')}</h3>
-                    <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                        <li>{t('permission_info_1')}</li>
-                        <li>{t('permission_info_2')}</li>
-                        <li>{t('permission_info_3')}</li>
+                <div className="mt-10 p-6 bg-blue-500/5 border border-blue-500/10 rounded-2xl shadow-inner">
+                    <h3 className="font-bold text-blue-600 mb-3 flex items-center space-x-2">
+                        <div className="h-2 w-2 bg-blue-600 rounded-full animate-pulse" />
+                        <span>{t('permission_info_title')}</span>
+                    </h3>
+                    <ul className="text-sm text-theme-secondary/80 space-y-2 font-medium">
+                        <li className="flex items-start space-x-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>{t('permission_info_1')}</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>{t('permission_info_2')}</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span>{t('permission_info_3')}</span>
+                        </li>
                     </ul>
                 </div>
             </div>

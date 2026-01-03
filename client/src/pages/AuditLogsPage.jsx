@@ -52,39 +52,39 @@ const AuditLogsPage = () => {
     }, [actionFilter, userIdFilter, startDate, endDate]);
 
     const getActionColor = (action) => {
-        if (action.includes('UPLOAD')) return 'text-blue-600 bg-blue-50';
-        if (action.includes('APPROVE')) return 'text-green-600 bg-green-50';
-        if (action.includes('REJECT')) return 'text-red-600 bg-red-50';
-        if (action.includes('LOGIN')) return 'text-slate-600 bg-slate-50';
-        return 'text-orange-600 bg-orange-50';
+        if (action.includes('UPLOAD')) return 'text-blue-600 bg-blue-500/10';
+        if (action.includes('APPROVE')) return 'text-green-600 bg-green-500/10';
+        if (action.includes('REJECT')) return 'text-red-600 bg-red-500/10';
+        if (action.includes('LOGIN')) return 'text-theme-secondary bg-theme-primary';
+        return 'text-orange-600 bg-orange-500/10';
     };
 
     return (
         <div className="space-y-6">
-            <div className="border-b border-slate-200 pb-5 flex items-center justify-between">
+            <div className="border-b border-theme pb-5 flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-800 font-primary italic-last-child">{t('audit_logs')}</h2>
-                    <p className="text-slate-500">{t('audit_subtitle')}</p>
+                    <h2 className="text-2xl font-bold text-theme-primary font-primary italic-last-child">{t('audit_logs')}</h2>
+                    <p className="text-theme-secondary">{t('audit_subtitle')}</p>
                 </div>
-                <div className="rounded-xl bg-orange-50 p-4 border border-orange-100 flex items-center space-x-3">
+                <div className="rounded-xl bg-orange-500/10 p-4 border border-orange-500/20 flex items-center space-x-3">
                     <ShieldAlert className="h-5 w-5 text-orange-500" />
-                    <span className="text-sm font-semibold text-orange-700">{t('admin_monitoring')}</span>
+                    <span className="text-sm font-semibold text-orange-600">{t('admin_monitoring')}</span>
                 </div>
             </div>
 
             {/* Advanced Filters */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mb-6">
-                <div className="flex items-center space-x-2 mb-4 text-slate-800 font-bold">
+            <div className="bg-theme-secondary p-5 rounded-2xl shadow-sm border border-theme mb-6">
+                <div className="flex items-center space-x-2 mb-4 text-theme-primary font-bold">
                     <Filter className="h-4 w-4 text-hospital-600" />
                     <span className="text-sm uppercase tracking-wider">{t('advanced_filter')}</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase">{t('action')}</label>
+                        <label className="text-[10px] font-bold text-theme-secondary/50 uppercase">{t('action')}</label>
                         <select
                             value={actionFilter}
                             onChange={(e) => setActionFilter(e.target.value)}
-                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:border-hospital-500 focus:ring-hospital-500 outline-none transition-all"
+                            className="w-full rounded-xl border border-theme bg-theme-primary px-4 py-2.5 text-sm focus:border-hospital-500 focus:ring-hospital-500 text-theme-primary outline-none transition-all"
                         >
                             <option value="">{t('all_actions')}</option>
                             <option value="UPLOAD">UPLOAD</option>
@@ -100,11 +100,11 @@ const AuditLogsPage = () => {
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase">{t('performer')}</label>
+                        <label className="text-[10px] font-bold text-theme-secondary/50 uppercase">{t('performer')}</label>
                         <select
                             value={userIdFilter}
                             onChange={(e) => setUserIdFilter(e.target.value)}
-                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:border-hospital-500 focus:ring-hospital-500 outline-none transition-all"
+                            className="w-full rounded-xl border border-theme bg-theme-primary px-4 py-2.5 text-sm focus:border-hospital-500 focus:ring-hospital-500 text-theme-primary outline-none transition-all"
                         >
                             <option value="">{t('all_users')}</option>
                             {users.map(u => (
@@ -114,27 +114,27 @@ const AuditLogsPage = () => {
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase">{t('from_date')}</label>
+                        <label className="text-[10px] font-bold text-theme-secondary/50 uppercase">{t('from_date')}</label>
                         <div className="relative">
-                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-theme-secondary/50" />
                             <input
                                 type="date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:border-hospital-500 outline-none transition-all"
+                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-theme bg-theme-primary text-sm focus:border-hospital-500 text-theme-primary outline-none transition-all"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase">{t('to_date')}</label>
+                        <label className="text-[10px] font-bold text-theme-secondary/50 uppercase">{t('to_date')}</label>
                         <div className="relative">
-                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-theme-secondary/50" />
                             <input
                                 type="date"
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:border-hospital-500 outline-none transition-all"
+                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-theme bg-theme-primary text-sm focus:border-hospital-500 text-theme-primary outline-none transition-all"
                             />
                         </div>
                     </div>
@@ -156,10 +156,10 @@ const AuditLogsPage = () => {
                 )}
             </div>
 
-            <div className="overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-100">
+            <div className="overflow-hidden rounded-2xl bg-theme-secondary shadow-sm border border-theme">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-slate-50 text-xs font-bold uppercase tracking-wider text-slate-400">
+                        <thead className="bg-table-header text-xs font-bold uppercase tracking-wider text-theme-secondary/50">
                             <tr>
                                 <th className="px-6 py-4 italic-last-child">{t('time')}</th>
                                 <th className="px-6 py-4">{t('user')}</th>
@@ -168,26 +168,26 @@ const AuditLogsPage = () => {
                                 <th className="px-6 py-4">{t('ip_address')}</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-theme">
                             {loading ? (
-                                <tr><td colSpan="5" className="py-20 text-center text-slate-400">{t('loading')}</td></tr>
+                                <tr><td colSpan="5" className="py-20 text-center text-theme-secondary/50">{t('loading')}</td></tr>
                             ) : logs.length === 0 ? (
-                                <tr><td colSpan="5" className="py-20 text-center text-slate-400">{t('empty_audit')}</td></tr>
+                                <tr><td colSpan="5" className="py-20 text-center text-theme-secondary/50">{t('empty_audit')}</td></tr>
                             ) : (
                                 logs.map((log) => (
-                                    <tr key={log.id} className="hover:bg-slate-50 transition-colors">
-                                        <td className="px-6 py-4 text-sm text-slate-500 flex items-center space-x-2">
+                                    <tr key={log.id} className="hover:bg-theme-primary transition-colors">
+                                        <td className="px-6 py-4 text-sm text-theme-secondary flex items-center space-x-2">
                                             <Clock className="h-3.5 w-3.5" />
                                             <span>{new Date(log.created_at || log.createdAt).toLocaleString(t('vi-VN') === 'vi-VN' ? 'vi-VN' : 'en-US')}</span>
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center space-x-2">
-                                                <div className="h-7 w-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                                                <div className="h-7 w-7 rounded-full bg-theme-primary flex items-center justify-center text-theme-secondary">
                                                     <User className="h-4 w-4" />
                                                 </div>
                                                 <div className="text-sm">
-                                                    <p className="font-bold text-slate-700">{log.user?.fullName || t('system_user')}</p>
-                                                    <p className="text-[10px] text-slate-400">@{log.user?.username || 'system'}</p>
+                                                    <p className="font-bold text-theme-primary">{log.user?.fullName || t('system_user')}</p>
+                                                    <p className="text-[10px] text-theme-secondary/50">@{log.user?.username || 'system'}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -196,19 +196,19 @@ const AuditLogsPage = () => {
                                                 {log.action}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-slate-600 max-w-xs">
+                                        <td className="px-6 py-4 text-sm text-theme-secondary max-w-xs">
                                             <div className="space-y-1">
-                                                <p className="font-mono text-xs text-slate-500">
+                                                <p className="font-mono text-xs text-theme-secondary/50">
                                                     {log.target_table}: {log.target_id?.substring(0, 8)}...
                                                 </p>
                                                 {log.payload && Object.keys(log.payload).length > 0 && (
-                                                    <p className="text-xs text-slate-400">
+                                                    <p className="text-xs text-theme-secondary/40">
                                                         {JSON.stringify(log.payload).substring(0, 50)}...
                                                     </p>
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-slate-400 font-mono">
+                                        <td className="px-6 py-4 text-sm text-theme-secondary/50 font-mono">
                                             {log.ipAddress || '0.0.0.0'}
                                         </td>
                                     </tr>
@@ -218,20 +218,20 @@ const AuditLogsPage = () => {
                     </table>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-slate-100 bg-white px-6 py-4">
-                    <p className="text-sm text-slate-500">{t('page')} {pagination.page} / {pagination.totalPages}</p>
+                <div className="flex items-center justify-between border-t border-theme bg-theme-secondary px-6 py-4">
+                    <p className="text-sm text-theme-secondary/70">{t('page')} {pagination.page} / {pagination.totalPages}</p>
                     <div className="flex space-x-2">
                         <button
                             onClick={() => fetchLogs(pagination.page - 1)}
                             disabled={pagination.page <= 1}
-                            className="rounded-lg border border-slate-200 px-3 py-1 text-sm font-medium hover:bg-slate-50 disabled:opacity-50"
+                            className="rounded-lg border border-theme px-3 py-1 text-sm font-medium hover:bg-theme-primary text-theme-secondary disabled:opacity-30"
                         >
                             {t('prev')}
                         </button>
                         <button
                             onClick={() => fetchLogs(pagination.page + 1)}
                             disabled={pagination.page >= pagination.totalPages}
-                            className="rounded-lg border border-slate-200 px-3 py-1 text-sm font-medium hover:bg-slate-50 disabled:opacity-50"
+                            className="rounded-lg border border-theme px-3 py-1 text-sm font-medium hover:bg-theme-primary text-theme-secondary disabled:opacity-30"
                         >
                             {t('next')}
                         </button>

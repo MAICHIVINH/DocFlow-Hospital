@@ -11,6 +11,8 @@
   --border-color: #f1f5f9;
   --card-bg: #ffffff;
   --input-bg: #f8fafc;
+  --table-header: #f8fafc;
+  --table-stripe: #f8fafc;
 
   --hospital-50: #eff6ff;
   --hospital-100: #dbeafe;
@@ -26,9 +28,11 @@
   --bg-sidebar: #0f172a;
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
-  --border-color: #1e293b;
+  --border-color: #334155;
   --card-bg: #1e293b;
   --input-bg: #0f172a;
+  --table-header: #334155;
+  --table-stripe: #1e293b;
 
   --hospital-50: #1e3a8a;
   --hospital-100: #1e40af;
@@ -77,4 +81,12 @@ body {
 
 .bg-theme-input {
   background-color: var(--input-bg);
+}
+
+.bg-table-header {
+  background-color: var(--table-header);
+}
+
+.bg-table-stripe {
+  background-color: var(--table-stripe);
 }

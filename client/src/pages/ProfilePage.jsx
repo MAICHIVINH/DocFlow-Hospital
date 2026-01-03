@@ -30,7 +30,7 @@ const ProfilePage = () => {
             setProfile(res.data);
             setFormData(prev => ({
                 ...prev,
-                full_name: res.data.full_name,
+                full_name: res.data.fullName || res.data.full_name || '',
                 email: res.data.email || ''
             }));
         } catch (err) {
@@ -81,16 +81,16 @@ const ProfilePage = () => {
                         <div className="mx-auto w-24 h-24 rounded-full bg-hospital-50/10 flex items-center justify-center mb-4 border-2 border-hospital-100/20">
                             <User className="h-12 w-12 text-hospital-600" />
                         </div>
-                        <h3 className="text-lg font-bold text-theme-primary">{profile?.full_name}</h3>
+                        <h3 className="text-lg font-bold text-theme-primary">{profile?.fullName || profile?.full_name}</h3>
                         <p className="text-sm text-theme-secondary mb-4">@{profile?.username}</p>
                         <div className="flex flex-wrap justify-center gap-2">
-                            <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                            <span className="px-3 py-1 bg-theme-primary text-theme-secondary rounded-full text-[10px] font-bold uppercase tracking-wider border border-theme">
                                 {t(`role_${profile?.role.toLowerCase()}`)}
                             </span>
                         </div>
                     </div>
 
-                    <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100 space-y-4">
+                    <div className="rounded-2xl bg-theme-secondary p-6 shadow-sm border border-theme space-y-4">
                         <div className="flex items-center space-x-3 text-sm">
                             <Building2 className="h-4 w-4 text-theme-secondary" />
                             <div>

@@ -98,28 +98,28 @@ const ApprovalsPage = () => {
 
     return (
         <div className="space-y-6">
-            <div className="border-b border-slate-200 pb-5">
-                <h2 className="text-2xl font-bold text-slate-800 font-primary">{t('approvals_queue')}</h2>
-                <p className="text-slate-500">{t('approvals_subtitle')}</p>
+            <div className="border-b border-theme pb-5">
+                <h2 className="text-2xl font-bold text-theme-primary font-primary">{t('approvals_queue')}</h2>
+                <p className="text-theme-secondary transition-all">{t('approvals_subtitle')}</p>
             </div>
 
             <div className="grid grid-cols-1 gap-6">
                 {approvals.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 rounded-2xl bg-white border border-dashed border-slate-300">
-                        <CheckCircle className="h-12 w-12 text-slate-200 mb-4" />
-                        <p className="text-slate-500 font-medium">{t('empty_approvals')}</p>
+                    <div className="flex flex-col items-center justify-center py-20 rounded-2xl bg-theme-secondary border border-dashed border-theme">
+                        <CheckCircle className="h-12 w-12 text-theme-secondary opacity-20 mb-4" />
+                        <p className="text-theme-secondary font-medium">{t('empty_approvals')}</p>
                     </div>
                 ) : (
                     approvals.map((doc) => (
-                        <div key={doc.id} className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm border border-slate-100 transition-all hover:shadow-md">
+                        <div key={doc.id} className="group relative overflow-hidden rounded-2xl bg-theme-secondary p-6 shadow-sm border border-theme transition-all hover:shadow-md">
                             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
                                 <div className="flex items-start space-x-4">
-                                    <div className="rounded-xl bg-orange-50 p-3 text-orange-600">
+                                    <div className="rounded-xl bg-orange-500/10 p-3 text-orange-600">
                                         <FileText className="h-6 w-6" />
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-bold text-slate-800">{doc.title}</h3>
-                                        <div className="mt-2 flex flex-wrap gap-4 text-sm text-slate-500">
+                                        <h3 className="text-lg font-bold text-theme-primary">{doc.title}</h3>
+                                        <div className="mt-2 flex flex-wrap gap-4 text-sm text-theme-secondary">
                                             <span className="flex items-center"><User className="mr-1.5 h-4 w-4" /> {doc.creator?.fullName || t('na')}</span>
                                             <span className="flex items-center"><Calendar className="mr-1.5 h-4 w-4" /> {new Date(doc.created_at).toLocaleDateString(i18n.language === 'vi' ? 'vi-VN' : 'en-US')}</span>
                                             <span className="flex items-center"><Activity className="mr-1.5 h-4 w-4" /> {doc.department?.name || t('unknown')}</span>
@@ -130,12 +130,12 @@ const ApprovalsPage = () => {
                                 <div className="flex items-center space-x-3">
                                     <button
                                         onClick={() => handleViewDocument(doc.id)}
-                                        className="flex items-center space-x-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                                        className="flex items-center space-x-2 rounded-xl border border-theme bg-theme-secondary px-4 py-2 text-sm font-medium text-theme-secondary hover:bg-theme-primary"
                                     >
                                         <Eye className="h-4 w-4" />
                                         <span>{t('preview')}</span>
                                     </button>
-                                    <div className="h-8 w-px bg-slate-100 mx-2 hidden lg:block"></div>
+                                    <div className="h-8 w-px bg-theme-primary mx-2 hidden lg:block"></div>
                                     <button
                                         onClick={() => handleReject(doc.id)}
                                         disabled={processingId === doc.id}
@@ -155,14 +155,14 @@ const ApprovalsPage = () => {
                                 </div>
                             </div>
 
-                            <div className="mt-6 flex items-start space-x-3 rounded-xl bg-slate-50 p-4 border border-slate-100">
-                                <MessageSquare className="h-5 w-5 text-slate-400 mt-0.5" />
+                            <div className="mt-6 flex items-start space-x-3 rounded-xl bg-theme-primary p-4 border border-theme">
+                                <MessageSquare className="h-5 w-5 text-theme-secondary mt-0.5" />
                                 <input
                                     type="text"
                                     value={notes[doc.id] || ''}
                                     onChange={(e) => handleNoteChange(doc.id, e.target.value)}
                                     placeholder={t('add_note_placeholder')}
-                                    className="flex-1 bg-transparent border-none p-0 text-sm focus:ring-0 placeholder-slate-400 text-slate-600"
+                                    className="flex-1 bg-transparent border-none p-0 text-sm focus:ring-0 placeholder-theme-secondary/40 text-theme-primary"
                                 />
                             </div>
                         </div>

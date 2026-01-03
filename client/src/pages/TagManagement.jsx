@@ -111,7 +111,7 @@ const TagManagement = () => {
                     <div className="flex flex-col space-y-4 mb-6 md:flex-row md:items-center md:justify-between md:space-y-0">
                         <h3 className="text-lg font-bold text-theme-primary font-primary">{t('tags_list')} ({tags.length})</h3>
                         <div className="relative w-full md:w-64">
-                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-theme-secondary/50" />
                             <input
                                 type="text"
                                 placeholder={t('search_tags_placeholder')}
@@ -123,7 +123,7 @@ const TagManagement = () => {
                     </div>
 
                     {loading ? (
-                        <div className="py-20 text-center text-slate-400">{t('loading')}</div>
+                        <div className="py-20 text-center text-theme-secondary/50">{t('loading')}</div>
                     ) : filteredTags.length === 0 ? (
                         <div className="py-20 text-center text-theme-secondary bg-theme-input rounded-xl border border-dashed border-theme">
                             {t('no_tags_found')}
@@ -137,15 +137,15 @@ const TagManagement = () => {
                                             <input
                                                 autoFocus
                                                 type="text"
-                                                className="flex-1 rounded-lg border border-hospital-200 bg-white px-2 py-1 text-sm focus:ring-2 focus:ring-hospital-500"
+                                                className="flex-1 rounded-lg border border-theme bg-theme-primary px-2 py-1 text-sm focus:ring-2 focus:ring-hospital-500 text-theme-primary"
                                                 value={editingTag.name}
                                                 onChange={(e) => setEditingTag({ ...editingTag, name: e.target.value })}
                                             />
                                             <div className="flex items-center space-x-1">
-                                                <button type="submit" className="text-green-600 hover:bg-green-50 p-1 rounded-lg">
+                                                <button type="submit" className="text-green-600 hover:bg-green-500/10 p-1 rounded-lg transition-colors">
                                                     <Check className="h-4 w-4" />
                                                 </button>
-                                                <button type="button" onClick={() => setEditingTag(null)} className="text-slate-400 hover:bg-slate-50 p-1 rounded-lg">
+                                                <button type="button" onClick={() => setEditingTag(null)} className="text-theme-secondary hover:bg-theme-primary p-1 rounded-lg transition-colors">
                                                     <X className="h-4 w-4" />
                                                 </button>
                                             </div>
@@ -159,14 +159,14 @@ const TagManagement = () => {
                                             <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-all">
                                                 <button
                                                     onClick={() => setEditingTag({ id: tag.id, name: tag.name })}
-                                                    className="rounded-lg p-1.5 text-slate-400 hover:text-hospital-600 hover:bg-hospital-50"
+                                                    className="rounded-lg p-1.5 text-theme-secondary hover:text-hospital-600 hover:bg-hospital-500/10 transition-all"
                                                     title={t('edit')}
                                                 >
                                                     <Pencil className="h-4 w-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteTag(tag.id)}
-                                                    className="rounded-lg p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50"
+                                                    className="rounded-lg p-1.5 text-theme-secondary hover:text-red-500 hover:bg-red-500/10 transition-all"
                                                     title={t('delete')}
                                                 >
                                                     <Trash2 className="h-4 w-4" />

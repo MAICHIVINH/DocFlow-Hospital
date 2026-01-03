@@ -134,24 +134,24 @@ const DocumentsPage = () => {
     };
 
     return (
-        <div className="space-y-6 text-slate-900">
+        <div className="space-y-6 text-theme-primary transition-all">
             <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-800 font-primary">{t('docs_management')}</h2>
-                    <p className="text-slate-500">{t('docs_subtitle')}</p>
+                    <h2 className="text-2xl font-bold text-theme-primary font-primary">{t('docs_management')}</h2>
+                    <p className="text-theme-secondary">{t('docs_subtitle')}</p>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex p-1 bg-slate-100/50 rounded-xl border border-slate-100 w-fit">
+                    <div className="flex p-1 bg-theme-primary rounded-xl border border-theme w-fit">
                         <button
                             onClick={() => setShowArchived(false)}
-                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${!showArchived ? 'bg-white shadow-sm text-hospital-600' : 'text-slate-500 hover:text-slate-700'}`}
+                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${!showArchived ? 'bg-theme-secondary shadow-sm text-hospital-600' : 'text-theme-secondary hover:text-theme-primary'}`}
                         >
                             <FolderArchive className="h-4 w-4" />
                             <span>{t('active_docs')}</span>
                         </button>
                         <button
                             onClick={() => setShowArchived(true)}
-                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${showArchived ? 'bg-white shadow-sm text-hospital-600' : 'text-slate-500 hover:text-slate-700'}`}
+                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${showArchived ? 'bg-theme-secondary shadow-sm text-hospital-600' : 'text-theme-secondary hover:text-theme-primary'}`}
                         >
                             <Archive className="h-4 w-4" />
                             <span>{t('archived_docs')}</span>
@@ -171,15 +171,15 @@ const DocumentsPage = () => {
             </div>
 
             {/* Filters Bar */}
-            <div className="rounded-2xl bg-white p-4 shadow-sm border border-slate-100 space-y-4">
+            <div className="rounded-2xl bg-theme-secondary p-4 shadow-sm border border-theme space-y-4">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-6">
                     <div className="md:col-span-2 lg:col-span-3">
                         <div className="relative">
-                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-theme-secondary" />
                             <input
                                 type="text"
                                 placeholder={t('search_docs_placeholder')}
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-10 pr-4 text-sm focus:border-hospital-500 focus:ring-hospital-500"
+                                className="w-full rounded-xl border border-theme bg-theme-primary py-2 pl-10 pr-4 text-sm focus:border-hospital-500 focus:ring-hospital-500 text-theme-primary"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -187,7 +187,7 @@ const DocumentsPage = () => {
                     </div>
                     <div>
                         <select
-                            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-sm focus:border-hospital-500 focus:ring-hospital-500"
+                            className="w-full rounded-xl border border-theme bg-theme-primary py-2 px-3 text-sm focus:border-hospital-500 focus:ring-hospital-500 text-theme-primary"
                             value={deptFilter}
                             onChange={(e) => setDeptFilter(e.target.value)}
                         >
@@ -200,7 +200,7 @@ const DocumentsPage = () => {
 
                     <button
                         onClick={() => setShowAdvanced(!showAdvanced)}
-                        className={`flex items-center justify-center space-x-2 rounded-xl border py-2 px-4 text-sm font-medium transition-colors ${showAdvanced ? 'bg-hospital-50 border-hospital-200 text-hospital-600' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}
+                        className={`flex items-center justify-center space-x-2 rounded-xl border py-2 px-4 text-sm font-medium transition-colors ${showAdvanced ? 'bg-hospital-50 border-hospital-200 text-hospital-600' : 'border-theme bg-theme-secondary text-theme-secondary hover:bg-theme-primary'}`}
                     >
                         <Filter className="h-4 w-4" />
                         <span>{showAdvanced ? t('hide_filter') : t('advanced_filter')}</span>
@@ -209,11 +209,11 @@ const DocumentsPage = () => {
 
                 {/* Advanced Filters */}
                 {showAdvanced && (
-                    <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-50 md:grid-cols-3 lg:grid-cols-5 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="grid grid-cols-1 gap-4 pt-4 border-t border-theme md:grid-cols-3 lg:grid-cols-5 animate-in fade-in slide-in-from-top-2 duration-300">
                         <div className="md:col-span-1">
-                            <label className="block text-xs font-bold text-slate-400 uppercase mb-1 px-1">{t('creator')}</label>
+                            <label className="block text-xs font-bold text-theme-secondary uppercase mb-1 px-1">{t('creator')}</label>
                             <select
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-sm text-slate-700 focus:border-hospital-500 focus:ring-hospital-500"
+                                className="w-full rounded-xl border border-theme bg-theme-primary py-2 px-3 text-sm text-theme-primary focus:border-hospital-500 focus:ring-hospital-500"
                                 value={creatorFilter}
                                 onChange={(e) => setCreatorFilter(e.target.value)}
                             >
@@ -224,19 +224,19 @@ const DocumentsPage = () => {
                             </select>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="block text-xs font-bold text-slate-400 uppercase mb-1 px-1">{t('from_date')}</label>
+                            <label className="block text-xs font-bold text-theme-secondary uppercase mb-1 px-1">{t('from_date')}</label>
                             <input
                                 type="date"
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-sm focus:border-hospital-500 focus:ring-hospital-500"
+                                className="w-full rounded-xl border border-theme bg-theme-primary py-2 px-3 text-sm text-theme-primary focus:border-hospital-500 focus:ring-hospital-500"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
                             />
                         </div>
                         <div className="md:col-span-1">
-                            <label className="block text-xs font-bold text-slate-400 uppercase mb-1 px-1">{t('to_date')}</label>
+                            <label className="block text-xs font-bold text-theme-secondary uppercase mb-1 px-1">{t('to_date')}</label>
                             <input
                                 type="date"
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-sm focus:border-hospital-500 focus:ring-hospital-500"
+                                className="w-full rounded-xl border border-theme bg-theme-primary py-2 px-3 text-sm text-theme-primary focus:border-hospital-500 focus:ring-hospital-500"
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
                             />
@@ -251,7 +251,7 @@ const DocumentsPage = () => {
                                     setSearchTerm('');
                                     setShowArchived(false);
                                 }}
-                                className="text-sm text-slate-500 hover:text-hospital-600 font-medium px-2 py-2"
+                                className="text-sm text-theme-secondary hover:text-hospital-600 font-medium px-2 py-2"
                             >
                                 {t('reset_default')}
                             </button>
@@ -261,10 +261,10 @@ const DocumentsPage = () => {
             </div>
 
             {/* Documents Table */}
-            <div className="overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-100">
+            <div className="overflow-hidden rounded-2xl bg-theme-secondary shadow-sm border border-theme">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-slate-50/50 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100">
+                        <thead className="bg-table-header text-xs font-bold uppercase tracking-wider text-theme-secondary border-b border-theme">
                             <tr>
                                 <th className="px-6 py-4">{t('documents')}</th>
                                 <th className="px-6 py-4">{t('departments')}</th>
@@ -273,29 +273,29 @@ const DocumentsPage = () => {
                                 <th className="px-6 py-4 text-right">{t('actions')}</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 italic-last-child">
+                        <tbody className="divide-y border-theme italic-last-child">
                             {loading ? (
                                 <tr>
                                     <td colSpan="5" className="py-20 text-center text-slate-400">{t('loading')}</td>
                                 </tr>
                             ) : documents.map((doc) => (
-                                <tr key={doc.id} className="group hover:bg-hospital-50/30 transition-colors">
+                                <tr key={doc.id} className="group hover:bg-theme-primary transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center space-x-3">
-                                            <div className="rounded-lg bg-orange-50 p-2 text-orange-600 group-hover:bg-white transition-colors">
+                                            <div className="rounded-lg bg-orange-50 p-2 text-orange-600 group-hover:bg-theme-secondary transition-colors">
                                                 <FileText className="h-5 w-5" />
                                             </div>
                                             <div>
-                                                <p className="font-semibold text-slate-700">{doc.title}</p>
+                                                <p className="font-semibold text-theme-primary">{doc.title}</p>
                                                 <div className="flex space-x-1 mt-1">
                                                     {(doc.tags || []).map(tag => (
-                                                        <span key={tag.id} className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">#{tag.name}</span>
+                                                        <span key={tag.id} className="text-[10px] bg-theme-primary text-theme-secondary px-1.5 py-0.5 rounded border border-theme">#{tag.name}</span>
                                                     ))}
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-slate-600">{doc.department?.name || t('unknown')}</td>
+                                    <td className="px-6 py-4 text-sm text-theme-secondary">{doc.department?.name || t('unknown')}</td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${doc.status === 'APPROVED' ? 'bg-green-100 text-green-700' :
                                             doc.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
@@ -303,26 +303,26 @@ const DocumentsPage = () => {
                                             {t(`status_${doc.status.toLowerCase()}`)}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-slate-500">{new Date(doc.createdAt).toLocaleDateString(t('vi-VN') === 'vi-VN' ? 'vi-VN' : 'en-US')}</td>
+                                    <td className="px-6 py-4 text-sm text-theme-secondary">{new Date(doc.createdAt).toLocaleDateString(t('vi-VN') === 'vi-VN' ? 'vi-VN' : 'en-US')}</td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end space-x-2">
                                             <button
                                                 onClick={() => handleViewDocument(doc.id)}
-                                                className="p-2 text-slate-400 hover:text-hospital-600 hover:bg-white rounded-lg transition-all"
+                                                className="p-2 text-theme-secondary hover:text-hospital-600 hover:bg-theme-secondary rounded-lg transition-all"
                                                 title={t('view_details')}
                                             >
                                                 <Eye className="h-4 w-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleDownloadDocument(doc.id)}
-                                                className="p-2 text-slate-400 hover:text-hospital-600 hover:bg-white rounded-lg transition-all"
+                                                className="p-2 text-theme-secondary hover:text-hospital-600 hover:bg-theme-secondary rounded-lg transition-all"
                                                 title={t('download')}
                                             >
                                                 <Download className="h-4 w-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteDocument(doc.id)}
-                                                className="p-2 text-slate-400 hover:text-red-600 hover:bg-white rounded-lg transition-all"
+                                                className="p-2 text-theme-secondary hover:text-red-600 hover:bg-theme-secondary rounded-lg transition-all"
                                                 title={t('delete')}
                                             >
                                                 <Trash2 className="h-4 w-4" />
@@ -335,18 +335,18 @@ const DocumentsPage = () => {
                     </table>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-slate-100 bg-white px-6 py-4">
-                    <p className="text-sm text-slate-500">{t('showing')} {documents.length} / {pagination.total}</p>
+                <div className="flex items-center justify-between border-t border-theme bg-theme-secondary px-6 py-4">
+                    <p className="text-sm text-theme-secondary">{t('showing')} {documents.length} / {pagination.total}</p>
                     <div className="flex space-x-2">
                         <button
-                            className="rounded-lg border border-slate-200 p-2 text-slate-400 hover:bg-slate-50 disabled:opacity-50"
+                            className="rounded-lg border border-theme p-2 text-theme-secondary hover:bg-theme-primary disabled:opacity-50"
                             disabled={pagination.page <= 1}
                             onClick={() => fetchDocuments(pagination.page - 1)}
                         >
                             <ChevronLeft className="h-4 w-4" />
                         </button>
                         <button
-                            className="rounded-lg border border-slate-200 p-2 text-slate-400 hover:bg-slate-50 disabled:opacity-50"
+                            className="rounded-lg border border-theme p-2 text-theme-secondary hover:bg-theme-primary disabled:opacity-50"
                             disabled={pagination.page >= pagination.totalPages}
                             onClick={() => fetchDocuments(pagination.page + 1)}
                         >
