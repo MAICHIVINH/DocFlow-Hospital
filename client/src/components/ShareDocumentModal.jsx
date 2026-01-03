@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import { X } from 'lucide-react';
 
 const ShareDocumentModal = ({ document, isOpen, onClose, onShareSuccess }) => {
     const { t } = useTranslation();
