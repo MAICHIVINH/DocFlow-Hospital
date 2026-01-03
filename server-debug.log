@@ -1,0 +1,182 @@
+[2026-01-02T11:58:39.453Z] GET /api/departments
+[2026-01-02T11:58:39.470Z] GET /api/notifications
+[2026-01-02T11:58:39.616Z] GET /api/departments
+[2026-01-02T11:58:39.618Z] GET /api/notifications
+[2026-01-02T11:58:39.949Z] GET /api/users?search=
+[2026-01-02T11:58:40.720Z] GET /api/departments
+[2026-01-02T11:58:40.726Z] GET /api/departments
+[2026-01-02T11:58:48.690Z] GET /api/stats/usage
+[2026-01-02T11:58:48.694Z] GET /api/stats/by-department
+[2026-01-02T11:58:48.697Z] GET /api/documents?limit=5
+[2026-01-02T11:58:48.710Z] GET /api/stats/by-department
+[2026-01-02T11:58:48.724Z] GET /api/documents?limit=5
+[2026-01-02T11:58:48.739Z] GET /api/notifications
+[2026-01-02T11:58:48.744Z] GET /api/stats/usage
+[2026-01-02T11:58:49.292Z] GET /api/departments
+[2026-01-02T11:58:49.301Z] GET /api/departments
+[2026-01-02T11:58:49.588Z] GET /api/documents?search=&department_id=&page=1&limit=10
+[2026-01-02T11:58:53.353Z] GET /api/departments
+[2026-01-02T11:59:39.732Z] GET /api/notifications
+[2026-01-02T11:59:48.730Z] GET /api/notifications
+[2026-01-02T12:00:12.519Z] GET /api/departments
+[2026-01-02T12:00:12.523Z] GET /api/notifications
+[2026-01-02T12:00:12.601Z] GET /api/notifications
+[2026-01-02T12:00:12.605Z] GET /api/departments
+[2026-01-02T12:00:12.821Z] GET /api/documents?search=&department_id=&page=1&limit=10
+[2026-01-02T12:00:13.488Z] GET /api/departments
+[2026-01-02T12:00:13.495Z] GET /api/departments
+[2026-01-02T12:00:13.986Z] GET /api/users?search=
+[2026-01-02T12:00:48.730Z] GET /api/notifications
+[2026-01-02T12:01:12.728Z] GET /api/notifications
+[2026-01-02T12:01:26.693Z] GET /api/departments
+[2026-01-02T12:01:26.711Z] GET /api/notifications
+[2026-01-02T12:01:26.963Z] GET /api/departments
+[2026-01-02T12:01:26.966Z] GET /api/notifications
+[2026-01-02T12:01:27.188Z] GET /api/users?search=
+[2026-01-02T12:01:28.151Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:01:28.158Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:01:28.620Z] GET /api/departments
+[2026-01-02T12:01:28.627Z] GET /api/departments
+[2026-01-02T12:01:29.183Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:01:29.191Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:01:29.533Z] GET /api/stats/by-department
+[2026-01-02T12:01:29.542Z] GET /api/stats/by-department
+[2026-01-02T12:01:29.871Z] GET /api/departments
+[2026-01-02T12:01:29.875Z] GET /api/departments
+[2026-01-02T12:01:30.162Z] GET /api/documents?search=&department_id=&page=1&limit=10
+[2026-01-02T12:01:30.418Z] GET /api/documents?status=PENDING
+[2026-01-02T12:01:30.427Z] GET /api/documents?status=PENDING
+[2026-01-02T12:01:31.907Z] GET /api/departments
+[2026-01-02T12:01:31.914Z] GET /api/departments
+[2026-01-02T12:01:33.176Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:01:33.183Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:01:33.898Z] GET /api/documents?status=PENDING
+[2026-01-02T12:01:33.907Z] GET /api/documents?status=PENDING
+[2026-01-02T12:01:37.868Z] GET /api/departments
+[2026-01-02T12:01:37.878Z] GET /api/departments
+[2026-01-02T12:01:40.804Z] GET /api/departments
+[2026-01-02T12:01:40.810Z] GET /api/departments
+[2026-01-02T12:01:41.300Z] GET /api/users?search=
+[2026-01-02T12:01:48.726Z] GET /api/notifications
+[2026-01-02T12:02:26.728Z] GET /api/notifications
+[2026-01-02T12:02:48.737Z] GET /api/notifications
+[2026-01-02T12:02:48.878Z] NOTIF ERROR: getMyNotifications: column Notification.createdAt does not exist
+Error
+    at Query.run (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\dialects\postgres\query.js:50:25)
+    at D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresQueryInterface.select (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\dialects\abstract\query-interface.js:407:12)
+    at async Notification.findAll (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\model.js:1140:21)
+    at async getMyNotifications (D:\MAICHIVINH\DocFlow-Hospital\src\controllers\notification.controller.js:13:31)
+[2026-01-02T12:02:58.997Z] GET /api/departments
+[2026-01-02T12:02:59.001Z] GET /api/notifications
+[2026-01-02T12:02:59.064Z] NOTIF ERROR: getMyNotifications: column Notification.createdAt does not exist
+Error
+    at Query.run (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\dialects\postgres\query.js:50:25)
+    at D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresQueryInterface.select (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\dialects\abstract\query-interface.js:407:12)
+    at async Notification.findAll (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\model.js:1140:21)
+    at async getMyNotifications (D:\MAICHIVINH\DocFlow-Hospital\src\controllers\notification.controller.js:13:31)
+[2026-01-02T12:02:59.070Z] GET /api/notifications
+[2026-01-02T12:02:59.073Z] GET /api/departments
+[2026-01-02T12:02:59.075Z] NOTIF ERROR: getMyNotifications: column Notification.createdAt does not exist
+Error
+    at Query.run (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\dialects\postgres\query.js:50:25)
+    at D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresQueryInterface.select (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\dialects\abstract\query-interface.js:407:12)
+    at async Notification.findAll (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\model.js:1140:21)
+    at async getMyNotifications (D:\MAICHIVINH\DocFlow-Hospital\src\controllers\notification.controller.js:13:31)
+[2026-01-02T12:02:59.498Z] GET /api/users?search=
+[2026-01-02T12:02:59.506Z] CONTROLLER ERROR: listUsers: column User.createdAt does not exist
+Error
+    at Query.run (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\dialects\postgres\query.js:50:25)
+    at D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresQueryInterface.select (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\dialects\abstract\query-interface.js:407:12)
+    at async User.findAll (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\model.js:1140:21)
+    at async Promise.all (index 1)
+    at async User.findAndCountAll (D:\MAICHIVINH\DocFlow-Hospital\node_modules\sequelize\lib\model.js:1322:27)
+    at async listUsers (D:\MAICHIVINH\DocFlow-Hospital\src\controllers\user.controller.js:40:33)
+[2026-01-02T12:03:29.404Z] GET /api/departments
+[2026-01-02T12:03:29.420Z] GET /api/notifications
+[2026-01-02T12:03:29.572Z] GET /api/departments
+[2026-01-02T12:03:29.575Z] GET /api/notifications
+[2026-01-02T12:03:29.902Z] GET /api/users?search=
+[2026-01-02T12:03:36.879Z] GET /api/departments
+[2026-01-02T12:03:36.886Z] GET /api/departments
+[2026-01-02T12:03:40.714Z] GET /api/departments
+[2026-01-02T12:03:40.722Z] GET /api/departments
+[2026-01-02T12:03:41.203Z] GET /api/users?search=
+[2026-01-02T12:03:48.733Z] GET /api/notifications
+[2026-01-02T12:04:10.138Z] GET /api/users?search=H%E1%BB%87+th%E1%BB%91ng+Qu%E1%BA%A3n+tr%E1%BB%8B+vi%C3%AAn
+[2026-01-02T12:04:13.162Z] GET /api/users?search=
+[2026-01-02T12:04:29.414Z] GET /api/notifications
+[2026-01-02T12:04:40.962Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:04:40.977Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:04:43.653Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:04:43.658Z] GET /api/notifications
+[2026-01-02T12:04:43.671Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:04:43.780Z] GET /api/notifications
+[2026-01-02T12:04:46.267Z] GET /api/departments
+[2026-01-02T12:04:46.276Z] GET /api/departments
+[2026-01-02T12:04:47.190Z] GET /api/departments
+[2026-01-02T12:04:47.197Z] GET /api/departments
+[2026-01-02T12:04:47.691Z] GET /api/users?search=
+[2026-01-02T12:04:48.734Z] GET /api/notifications
+[2026-01-02T12:05:03.638Z] POST /api/auth/login
+[2026-01-02T12:05:03.805Z] GET /api/stats/usage
+[2026-01-02T12:05:03.808Z] GET /api/stats/by-department
+[2026-01-02T12:05:03.810Z] GET /api/documents?limit=5
+[2026-01-02T12:05:03.814Z] GET /api/notifications
+[2026-01-02T12:05:03.823Z] GET /api/stats/by-department
+[2026-01-02T12:05:03.843Z] GET /api/documents?limit=5
+[2026-01-02T12:05:03.848Z] GET /api/notifications
+[2026-01-02T12:05:03.850Z] GET /api/stats/usage
+[2026-01-02T12:05:08.357Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:05:08.362Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:05:09.419Z] GET /api/stats/by-department
+[2026-01-02T12:05:09.428Z] GET /api/stats/by-department
+[2026-01-02T12:05:11.244Z] GET /api/documents?status=PENDING
+[2026-01-02T12:05:11.259Z] GET /api/documents?status=PENDING
+[2026-01-02T12:05:11.857Z] GET /api/departments
+[2026-01-02T12:05:11.864Z] GET /api/departments
+[2026-01-02T12:05:12.148Z] GET /api/documents?search=&department_id=&page=1&limit=10
+[2026-01-02T12:05:12.987Z] GET /api/stats/usage
+[2026-01-02T12:05:12.990Z] GET /api/stats/by-department
+[2026-01-02T12:05:12.992Z] GET /api/documents?limit=5
+[2026-01-02T12:05:13.002Z] GET /api/stats/by-department
+[2026-01-02T12:05:13.011Z] GET /api/stats/usage
+[2026-01-02T12:05:13.013Z] GET /api/documents?limit=5
+[2026-01-02T12:05:15.008Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:05:15.013Z] GET /api/audit?page=1&limit=20
+[2026-01-02T12:05:17.954Z] GET /api/stats/by-department
+[2026-01-02T12:05:17.960Z] GET /api/stats/by-department
+[2026-01-02T12:05:18.630Z] GET /api/documents?status=PENDING
+[2026-01-02T12:05:18.637Z] GET /api/documents?status=PENDING
+[2026-01-02T12:05:19.086Z] GET /api/departments
+[2026-01-02T12:05:19.091Z] GET /api/departments
+[2026-01-02T12:05:19.378Z] GET /api/documents?search=&department_id=&page=1&limit=10
+[2026-01-02T12:05:19.412Z] GET /api/stats/usage
+[2026-01-02T12:05:19.414Z] GET /api/stats/by-department
+[2026-01-02T12:05:19.416Z] GET /api/documents?limit=5
+[2026-01-02T12:05:19.426Z] GET /api/stats/by-department
+[2026-01-02T12:05:19.429Z] GET /api/documents?limit=5
+[2026-01-02T12:05:19.432Z] GET /api/stats/usage
+[2026-01-02T12:05:29.513Z] POST /api/auth/login
+[2026-01-02T12:05:39.485Z] POST /api/auth/login
+[2026-01-02T12:05:39.572Z] GET /api/stats/usage
+[2026-01-02T12:05:39.575Z] GET /api/stats/by-department
+[2026-01-02T12:05:39.577Z] GET /api/documents?limit=5
+[2026-01-02T12:05:39.581Z] GET /api/notifications
+[2026-01-02T12:05:39.590Z] GET /api/stats/by-department
+[2026-01-02T12:05:39.598Z] GET /api/documents?limit=5
+[2026-01-02T12:05:39.601Z] GET /api/notifications
+[2026-01-02T12:05:39.607Z] GET /api/stats/usage
+[2026-01-02T12:05:40.764Z] GET /api/departments
+[2026-01-02T12:05:40.771Z] GET /api/departments
+[2026-01-02T12:05:42.659Z] GET /api/departments
+[2026-01-02T12:05:42.663Z] GET /api/departments
+[2026-01-02T12:05:43.151Z] GET /api/users?search=
+[2026-01-02T12:05:48.727Z] GET /api/notifications

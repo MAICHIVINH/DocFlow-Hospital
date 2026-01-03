@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-sidebar: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --border-color: #f1f5f9;
+  --card-bg: #ffffff;
+  --input-bg: #f8fafc;
+
+  --hospital-50: #eff6ff;
+  --hospital-100: #dbeafe;
+  --hospital-500: #3b82f6;
+  --hospital-600: #2563eb;
+  --hospital-700: #1d4ed8;
+}
+
+.dark {
+  /* Dark Theme Variables */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-sidebar: #0f172a;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border-color: #1e293b;
+  --card-bg: #1e293b;
+  --input-bg: #0f172a;
+
+  --hospital-50: #1e3a8a;
+  --hospital-100: #1e40af;
+  --hospital-500: #3b82f6;
+  --hospital-600: #60a5fa;
+  --hospital-700: #93c5fd;
+}
+
+.bg-theme-primary {
+  background-color: var(--bg-primary);
+}
+
+.text-theme-primary {
+  color: var(--text-primary);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom Utilities for Theme */
+.bg-theme-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.bg-theme-sidebar {
+  background-color: var(--bg-sidebar);
+}
+
+.text-theme-secondary {
+  color: var(--text-secondary);
+}
+
+.border-theme {
+  border-color: var(--border-color);
+}
+
+.bg-theme-card {
+  background-color: var(--card-bg);
+}
+
+.bg-theme-input {
+  background-color: var(--input-bg);
+}
