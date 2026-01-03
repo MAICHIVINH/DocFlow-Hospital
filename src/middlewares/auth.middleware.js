@@ -71,21 +71,31 @@ const checkPermission = (permission) => {
     return (req, res, next) => {
         const role = req.userRole;
 
-        const permissionMap = {
-            'ADMIN': ['*'],
-            'MANAGER': [
-                'document:read', 'document:create', 'document:update', 'document:delete',
-                'document:approve', 'tag:manage', 'stats:read'
-            ],
-            'USER': [
-                'document:read', 'document:create', 'stats:read'
-            ],
-            'VIEWER': [
-                'document:read', 'stats:read'
-            ]
-        };
+        // Try to get permissions from database cache first
+        const permissionController = require('../controllers/permission.controller');
+        let allowedPermissions = permissionController.getPermissionsForRole(role);
 
-        const allowedPermissions = permissionMap[role] || [];
+        // Fallback to hardcoded map if cache is empty (safety measure)
+        if (!allowedPermissions || allowedPermissions.length === 0) {
+            console.warn(`[Auth] No cached permissions for role ${role}, using fallback`);
+            const permissionMap = {
+                'ADMIN': ['*'],
+                'MANAGER': [
+                    'document:read', 'document:create', 'document:update', 'document:delete',
+                    'document:approve', 'tag:manage', 'stats:read'
+                ],
+                'STAFF': [
+                    'document:read', 'document:create', 'document:update', 'stats:read'
+                ],
+                'USER': [
+                    'document:read', 'document:create', 'stats:read'
+                ],
+                'VIEWER': [
+                    'document:read', 'stats:read'
+                ]
+            };
+            allowedPermissions = permissionMap[role] || [];
+        }
 
         if (allowedPermissions.includes('*') || allowedPermissions.includes(permission)) {
             return next();

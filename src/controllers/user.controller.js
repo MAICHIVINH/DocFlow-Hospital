@@ -73,7 +73,7 @@ const listUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
-        const { username, password, full_name, role, department_id, status } = req.body;
+        const { username, password, full_name, email, role, department_id, status } = req.body;
 
         const existingUser = await User.findOne({ where: { username } });
         if (existingUser) {
@@ -89,6 +89,7 @@ const createUser = async (req, res) => {
             username,
             passwordHash: password_hash,
             fullName: full_name,
+            email,
             roleId: roleRecord.id,
             departmentId: department_id,
             status: status || 'ACTIVE'
@@ -112,7 +113,7 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const { full_name, role, department_id, status, password } = req.body;
+        const { full_name, email, role, department_id, status, password } = req.body;
 
         const user = await User.findByPk(id);
         if (!user) return res.status(404).json({ message: 'Không tìm thấy người dùng.' });
@@ -197,13 +198,14 @@ const getMe = async (req, res) => {
 
 const updateMe = async (req, res) => {
     try {
-        const { full_name, password, currentPassword } = req.body;
+        const { full_name, email, password, currentPassword } = req.body;
         const user = await User.findByPk(req.userId);
 
         if (!user) return res.status(404).json({ message: 'Người dùng không tồn tại.' });
 
         const updateData = {};
         if (full_name) updateData.fullName = full_name;
+        if (email) updateData.email = email;
 
         if (password) {
             if (!currentPassword) {

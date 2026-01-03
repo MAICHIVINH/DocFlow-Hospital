@@ -32,6 +32,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('ACTIVE', 'INACTIVE'),
             defaultValue: 'ACTIVE'
         },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+                isEmail: true
+            }
+        },
         createdAt: {
             type: DataTypes.DATE,
             field: 'created_at'
@@ -51,6 +58,16 @@ module.exports = (sequelize, DataTypes) => {
         User.belongsTo(models.Role, { foreignKey: 'role_id', as: 'role' });
         User.hasMany(models.Document, { foreignKey: 'creator_id', as: 'documents' });
         User.hasMany(models.Notification, { foreignKey: 'recipient_id', as: 'notifications' });
+
+        // Associations for shared documents
+        User.hasMany(models.SharedDocument, {
+            foreignKey: 'shared_with_user_id',
+            as: 'sharedDocuments'
+        });
+        User.hasMany(models.SharedDocument, {
+            foreignKey: 'shared_by_user_id',
+            as: 'documentsSharedByMe'
+        });
     };
 
     return User;

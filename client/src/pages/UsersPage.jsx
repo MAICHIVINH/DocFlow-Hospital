@@ -17,6 +17,7 @@ const UsersPage = () => {
         username: '',
         password: '',
         full_name: '',
+        email: '',
         role: 'STAFF',
         department_id: '',
         status: 'ACTIVE'
@@ -62,6 +63,7 @@ const UsersPage = () => {
                 username: user.username,
                 password: '', // Don't show password
                 full_name: user.fullName || user.full_name,
+                email: user.email || '',
                 role: user.role,
                 department_id: user.department_id,
                 status: user.status
@@ -72,6 +74,7 @@ const UsersPage = () => {
                 username: '',
                 password: '',
                 full_name: '',
+                email: '',
                 role: 'STAFF',
                 department_id: '',
                 status: 'ACTIVE'
@@ -149,7 +152,7 @@ const UsersPage = () => {
                     <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-400">
                         <tr>
                             <th className="px-6 py-4">{t('full_name')}</th>
-                            <th className="px-6 py-4">{t('username')}</th>
+                            <th className="px-6 py-4">{t('email')}</th>
                             <th className="px-6 py-4">{t('role')}</th>
                             <th className="px-6 py-4">{t('department')}</th>
                             <th className="px-6 py-4">{t('status')}</th>
@@ -159,8 +162,11 @@ const UsersPage = () => {
                     <tbody className="divide-y divide-slate-100">
                         {users.map(u => (
                             <tr key={u.id} className="hover:bg-slate-50 transition-colors">
-                                <td className="px-6 py-4 font-semibold text-slate-700">{u.fullName || u.full_name}</td>
-                                <td className="px-6 py-4 text-sm text-slate-500">@{u.username}</td>
+                                <td className="px-6 py-4">
+                                    <div className="font-semibold text-slate-700">{u.fullName || u.full_name}</div>
+                                    <div className="text-[10px] text-slate-400">@{u.username}</div>
+                                </td>
+                                <td className="px-6 py-4 text-sm text-slate-500">{u.email || '-'}</td>
                                 <td className="px-6 py-4">
                                     <span className={`px-2 py-1 rounded-md text-[10px] font-bold ${u.role === 'ADMIN' ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-600'}`}>
                                         {t(`role_${u.role.toLowerCase()}`)}
@@ -193,9 +199,15 @@ const UsersPage = () => {
                             <button onClick={() => setIsModalOpen(false)}><X className="h-5 w-5 text-slate-400" /></button>
                         </div>
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold">{t('full_name')}</label>
-                                <input type="text" className="w-full rounded-xl border p-2.5 text-sm" value={formData.full_name} onChange={e => setFormData({ ...formData, full_name: e.target.value })} required />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold">{t('full_name')}</label>
+                                    <input type="text" className="w-full rounded-xl border p-2.5 text-sm" value={formData.full_name} onChange={e => setFormData({ ...formData, full_name: e.target.value })} required />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold">{t('email')}</label>
+                                    <input type="email" className="w-full rounded-xl border p-2.5 text-sm" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} placeholder="vinh@example.com" />
+                                </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">

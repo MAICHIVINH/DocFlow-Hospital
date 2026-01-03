@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { X, Download, Trash2, Calendar, User, Building2, Eye, Tag, Plus, CheckCircle, Archive, FolderArchive } from 'lucide-react';
+import { X, Download, Trash2, Calendar, User, Building2, Eye, Tag, Plus, CheckCircle, Archive, FolderArchive, Share2 } from 'lucide-react';
 import { useSnackbar } from 'notistack';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import ShareDocumentModal from './ShareDocumentModal';
 
 const DocumentDetailModal = ({ isOpen, onClose, documentId, onDelete }) => {
     const { t } = useTranslation();
@@ -12,6 +13,7 @@ const DocumentDetailModal = ({ isOpen, onClose, documentId, onDelete }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [proxyUrl, setProxyUrl] = useState(null);
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
@@ -328,6 +330,19 @@ const DocumentDetailModal = ({ isOpen, onClose, documentId, onDelete }) => {
                                     <span>{t('download')}</span>
                                 </button>
 
+                                {/* Share button - only for PRIVATE documents */}
+                                {document.visibility === 'PRIVATE' && (
+                                    (document.creatorId === user?.id || user?.role === 'ADMIN' || user?.role === 'MANAGER') && (
+                                        <button
+                                            onClick={() => setIsShareModalOpen(true)}
+                                            className="flex items-center space-x-2 rounded-xl bg-blue-50 px-5 py-2.5 text-sm font-bold text-blue-700 transition-all hover:bg-blue-100"
+                                        >
+                                            <Share2 className="h-4 w-4" />
+                                            <span>{t('share')}</span>
+                                        </button>
+                                    )
+                                )}
+
                                 {!document.isArchived ? (
                                     <button
                                         onClick={handleArchive}
@@ -358,6 +373,19 @@ const DocumentDetailModal = ({ isOpen, onClose, documentId, onDelete }) => {
                     ) : null}
                 </div>
             </div>
+
+            {/* Share Modal */}
+            {document && (
+                <ShareDocumentModal
+                    document={document}
+                    isOpen={isShareModalOpen}
+                    onClose={() => setIsShareModalOpen(false)}
+                    onShareSuccess={() => {
+                        enqueueSnackbar(t('share_success'), { variant: 'success' });
+                        fetchDocumentDetail();
+                    }}
+                />
+            )}
         </div>
     );
 };

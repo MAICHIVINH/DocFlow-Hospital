@@ -12,6 +12,7 @@ import UsersPage from './pages/UsersPage'
 import DepartmentsPage from './pages/DepartmentsPage'
 import NotificationsPage from './pages/NotificationsPage'
 import TagManagement from './pages/TagManagement'
+import PermissionsPage from './pages/PermissionsPage'
 import ProfilePage from './pages/ProfilePage'
 import PrivateRoute from './components/PrivateRoute'
 import MainLayout from './components/MainLayout'
@@ -36,6 +37,7 @@ function App() {
                                 <Route path="/departments" element={<MainLayout children={<DepartmentsPage />} />} />
                                 <Route path="/notifications" element={<MainLayout children={<NotificationsPage />} />} />
                                 <Route path="/tags" element={<MainLayout children={<TagManagement />} />} />
+                                <Route path="/permissions" element={<MainLayout children={<PermissionsPage />} />} />
                                 <Route path="/profile" element={<MainLayout children={<ProfilePage />} />} />
                             </Route>
 

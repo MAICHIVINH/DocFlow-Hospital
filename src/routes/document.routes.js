@@ -88,4 +88,32 @@ router.patch(
     docController.unarchiveDocument
 );
 
+// Share document with specific users (PRIVATE documents only)
+router.post(
+    '/:id/share',
+    [verifyToken, checkPermission('document:read')],
+    docController.shareDocument
+);
+
+// Unshare document from a specific user
+router.delete(
+    '/:id/share/:userId',
+    [verifyToken, checkPermission('document:read')],
+    docController.unshareDocument
+);
+
+// Get list of users a document is shared with
+router.get(
+    '/:id/shared-users',
+    [verifyToken, checkPermission('document:read')],
+    docController.getSharedUsers
+);
+
+// Get documents shared with current user
+router.get(
+    '/shared/with-me',
+    [verifyToken, checkPermission('document:read')],
+    docController.getSharedWithMe
+);
+
 module.exports = router;

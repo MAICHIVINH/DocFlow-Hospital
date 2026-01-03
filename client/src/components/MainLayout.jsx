@@ -119,6 +119,7 @@ const MainLayout = ({ children }) => {
             '/users': { parent: t('users'), child: t('users') },
             '/departments': { parent: t('users'), child: t('departments') },
             '/tags': { parent: t('users'), child: t('tag_management') },
+            '/permissions': { parent: t('users'), child: t('permission_management') },
             '/profile': { parent: t('profile'), child: t('summary') }
         };
         const { parent, child } = map[currentPath] || map['/docs'];
@@ -178,6 +179,7 @@ const MainLayout = ({ children }) => {
                                     <SidebarItem to="/users" icon={Users} label={t('users')} />
                                     <SidebarItem to="/departments" icon={Layers} label={t('departments')} />
                                     <SidebarItem to="/tags" icon={Tag} label={t('tag_management')} />
+                                    <SidebarItem to="/permissions" icon={ShieldAlert} label={t('permission_management')} />
                                 </div>
                             </div>
                         )}

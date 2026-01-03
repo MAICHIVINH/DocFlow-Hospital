@@ -2,15 +2,20 @@ const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    secure: process.env.SMTP_PORT == 465, // true for 465, false for other ports
+    port: parseInt(process.env.SMTP_PORT || 587),
+    secure: process.env.SMTP_PORT == 465,
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
+    },
+    tls: {
+        // Do not fail on invalid certs, helpful for some SMTP servers
+        rejectUnauthorized: false
     }
 });
 
 const sendEmail = async (to, subject, text, html) => {
+    console.log(`[EMAIL] Attempting to send email to: ${to}`);
     try {
         const info = await transporter.sendMail({
             from: process.env.SMTP_FROM,
@@ -19,11 +24,16 @@ const sendEmail = async (to, subject, text, html) => {
             text,
             html
         });
-        console.log(`[EMAIL] Message sent: ${info.messageId}`);
+        console.log(`[EMAIL] Success! Message sent: ${info.messageId}`);
         return info;
     } catch (error) {
-        console.error('[EMAIL] error:', error);
-        // Don't throw, just log to prevent blocking the main process
+        console.error('[EMAIL] CRITICAL ERROR:', error.message);
+        if (error.code === 'EAUTH') {
+            console.error('[EMAIL] Authentication failed. Please check your SMTP_PASS (App Password).');
+        }
+        // Log the full error to help debugging
+        console.error(error);
+        return null;
     }
 };
 

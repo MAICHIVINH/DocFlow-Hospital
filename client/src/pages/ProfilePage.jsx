@@ -13,6 +13,7 @@ const ProfilePage = () => {
     const [saving, setSaving] = useState(false);
     const [formData, setFormData] = useState({
         full_name: '',
+        email: '',
         currentPassword: '',
         password: '',
         confirmPassword: ''
@@ -27,7 +28,11 @@ const ProfilePage = () => {
         try {
             const res = await api.get('/users/me');
             setProfile(res.data);
-            setFormData(prev => ({ ...prev, full_name: res.data.full_name }));
+            setFormData(prev => ({
+                ...prev,
+                full_name: res.data.full_name,
+                email: res.data.email || ''
+            }));
         } catch (err) {
             enqueueSnackbar(t('error_loading_profile'), { variant: 'error' });
         } finally {
@@ -46,6 +51,7 @@ const ProfilePage = () => {
         try {
             await api.put('/users/me', {
                 full_name: formData.full_name,
+                email: formData.email,
                 currentPassword: formData.currentPassword,
                 password: formData.password || undefined
             });
@@ -93,6 +99,13 @@ const ProfilePage = () => {
                             </div>
                         </div>
                         <div className="flex items-center space-x-3 text-sm">
+                            <Mail className="h-4 w-4 text-theme-secondary" />
+                            <div>
+                                <p className="text-theme-secondary text-[10px] uppercase font-bold">{t('email')}</p>
+                                <p className="text-theme-primary font-medium truncate max-w-[150px]">{profile?.email || t('na')}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-3 text-sm">
                             <Shield className="h-4 w-4 text-theme-secondary" />
                             <div>
                                 <p className="text-theme-secondary text-[10px] uppercase font-bold">{t('status')}</p>
@@ -123,6 +136,20 @@ const ProfilePage = () => {
                                             value={formData.full_name}
                                             onChange={e => setFormData({ ...formData, full_name: e.target.value })}
                                             required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-semibold text-theme-secondary mb-1">{t('email')}</label>
+                                    <div className="relative">
+                                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme-secondary" />
+                                        <input
+                                            type="email"
+                                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-theme bg-theme-input text-theme-primary focus:ring-2 focus:ring-hospital-500/10 focus:border-hospital-500 transition-all outline-none"
+                                            value={formData.email}
+                                            onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                            placeholder="example@hospital.com"
                                         />
                                     </div>
                                 </div>

@@ -2,7 +2,7 @@ const { minioClient, bucketName } = require('../config/minio.config');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../models');
-const { Document, DocumentVersion, User, Department, Tag, sequelize } = db;
+const { Document, DocumentVersion, User, Department, Tag, SharedDocument, sequelize } = db;
 const { Op } = require('sequelize');
 const auditService = require('../services/audit.service');
 const notificationService = require('../services/notification.service');
@@ -19,11 +19,28 @@ const checkDocumentAccess = async (userId, userRole, userDeptId, documentId) => 
 
     // Check visibility
     if (doc.visibility === 'PUBLIC') return { allowed: true, document: doc };
+
     if (doc.visibility === 'DEPARTMENT' && doc.departmentId === userDeptId) {
         return { allowed: true, document: doc };
     }
-    if (doc.visibility === 'PRIVATE' && doc.creatorId === userId) {
-        return { allowed: true, document: doc };
+
+    if (doc.visibility === 'PRIVATE') {
+        // Check if user is the creator
+        if (doc.creatorId === userId) {
+            return { allowed: true, document: doc };
+        }
+
+        // Check if document has been shared with this user
+        const sharedDoc = await SharedDocument.findOne({
+            where: {
+                documentId: documentId,
+                sharedWithUserId: userId
+            }
+        });
+
+        if (sharedDoc) {
+            return { allowed: true, document: doc };
+        }
     }
 
     return { allowed: false, message: 'Access denied' };
@@ -122,6 +139,11 @@ const listDocuments = async (req, res) => {
                     {
                         visibility: 'PRIVATE',
                         creatorId: req.userId
+                    },
+                    // Include PRIVATE documents shared with this user
+                    {
+                        visibility: 'PRIVATE',
+                        '$sharedWith.shared_with_user_id$': req.userId
                     }
                 ]
             });
@@ -210,6 +232,13 @@ const listDocuments = async (req, res) => {
                 model: Department,
                 as: 'department',
                 attributes: ['id', 'name']
+            },
+            // Include SharedDocument for permission checking
+            {
+                model: SharedDocument,
+                as: 'sharedWith',
+                required: false, // LEFT JOIN
+                attributes: []
             }
         ];
 
@@ -613,6 +642,184 @@ const unarchiveDocument = async (req, res) => {
     }
 };
 
+const shareDocument = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { userIds } = req.body; // Array of user IDs to share with
+
+        if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
+            return res.status(400).json({ message: 'Please provide user IDs to share with' });
+        }
+
+        const doc = await Document.findByPk(id);
+        if (!doc) return res.status(404).json({ message: 'Document not found' });
+
+        // Only PRIVATE documents can be shared
+        if (doc.visibility !== 'PRIVATE') {
+            return res.status(400).json({ message: 'Only PRIVATE documents can be shared with specific users' });
+        }
+
+        // Only creator, ADMIN, or MANAGER can share
+        if (doc.creatorId !== req.userId && req.userRole !== 'ADMIN' && req.userRole !== 'MANAGER') {
+            return res.status(403).json({ message: 'Only document creator, admin, or manager can share documents' });
+        }
+
+        // Create share records (ignore duplicates)
+        const sharePromises = userIds.map(async (userId) => {
+            try {
+                await SharedDocument.findOrCreate({
+                    where: {
+                        documentId: id,
+                        sharedWithUserId: userId
+                    },
+                    defaults: {
+                        sharedByUserId: req.userId
+                    }
+                });
+            } catch (err) {
+                console.error(`Error sharing with user ${userId}:`, err);
+            }
+        });
+
+        await Promise.all(sharePromises);
+
+        // Audit log
+        try {
+            await auditService.logAction(req.userId, 'SHARE', 'documents', id, { sharedWith: userIds }, req);
+
+            // Notify each user
+            for (const userId of userIds) {
+                await notificationService.createNotification(
+                    userId,
+                    'Tài liệu được chia sẻ',
+                    `Tài liệu "${doc.title}" đã được chia sẻ với bạn`,
+                    `/docs/${id}`,
+                    true // Send email
+                );
+            }
+        } catch (auditError) {
+            console.error('Audit/Notification error:', auditError);
+        }
+
+        res.status(200).json({ message: 'Document shared successfully', sharedWith: userIds });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const unshareDocument = async (req, res) => {
+    try {
+        const { id, userId } = req.params;
+
+        const doc = await Document.findByPk(id);
+        if (!doc) return res.status(404).json({ message: 'Document not found' });
+
+        // Only creator, ADMIN, or MANAGER can unshare
+        if (doc.creatorId !== req.userId && req.userRole !== 'ADMIN' && req.userRole !== 'MANAGER') {
+            return res.status(403).json({ message: 'Only document creator, admin, or manager can unshare documents' });
+        }
+
+        const deleted = await SharedDocument.destroy({
+            where: {
+                documentId: id,
+                sharedWithUserId: userId
+            }
+        });
+
+        if (deleted === 0) {
+            return res.status(404).json({ message: 'Share record not found' });
+        }
+
+        // Audit log
+        try {
+            await auditService.logAction(req.userId, 'UNSHARE', 'documents', id, { unsharedFrom: userId }, req);
+        } catch (auditError) {
+            console.error('Audit error:', auditError);
+        }
+
+        res.status(200).json({ message: 'Document unshared successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const getSharedUsers = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const doc = await Document.findByPk(id);
+        if (!doc) return res.status(404).json({ message: 'Document not found' });
+
+        // Check access
+        const access = await checkDocumentAccess(req.userId, req.userRole, req.userDeptId, id);
+        if (!access.allowed) {
+            return res.status(403).json({ message: access.message });
+        }
+
+        const sharedUsers = await SharedDocument.findAll({
+            where: { documentId: id },
+            include: [
+                {
+                    model: User,
+                    as: 'sharedWithUser',
+                    attributes: ['id', 'fullName', 'username']
+                },
+                {
+                    model: User,
+                    as: 'sharedByUser',
+                    attributes: ['id', 'fullName', 'username']
+                }
+            ]
+        });
+
+        res.status(200).json({ data: sharedUsers });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const getSharedWithMe = async (req, res) => {
+    try {
+        const { page = 1, limit = 10 } = req.query;
+        const offset = (page - 1) * limit;
+
+        const { count, rows } = await SharedDocument.findAndCountAll({
+            where: { sharedWithUserId: req.userId },
+            include: [
+                {
+                    model: Document,
+                    as: 'document',
+                    include: [
+                        { model: User, as: 'creator', attributes: ['id', 'fullName', 'username'] },
+                        { model: Department, as: 'department', attributes: ['id', 'name'] },
+                        { model: Tag, as: 'tags', through: { attributes: [] } }
+                    ]
+                },
+                {
+                    model: User,
+                    as: 'sharedByUser',
+                    attributes: ['id', 'fullName', 'username']
+                }
+            ],
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            order: [['createdAt', 'DESC']]
+        });
+
+        res.status(200).json({
+            data: rows,
+            pagination: {
+                total: count,
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalPages: Math.ceil(count / limit)
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     uploadDocument,
     approveDocument,
@@ -625,5 +832,9 @@ module.exports = {
     createNewVersion,
     restoreVersion,
     archiveDocument,
-    unarchiveDocument
+    unarchiveDocument,
+    shareDocument,
+    unshareDocument,
+    getSharedUsers,
+    getSharedWithMe
 };

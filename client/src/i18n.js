@@ -41,6 +41,7 @@ const resources = {
             "approvals": "Duyệt tài liệu",
             "users": "Quản lý nhân sự",
             "tag_management": "Quản lý thẻ",
+            "permission_management": "Quản lý phân quyền",
 
             // Dashboard Page
             "greeting": "Chào mừng trở lại,",
@@ -134,6 +135,7 @@ const resources = {
             "search_users_placeholder": "Tìm kiếm nhân viên...",
             "add_user": "Thêm nhân viên",
             "full_name": "Họ và tên",
+            "email": "Email",
             "username": "Tài khoản",
             "role": "Vai trò",
             "active_status": "Hoạt động",
@@ -266,6 +268,33 @@ const resources = {
             "date": "Ngày",
             "note": "Ghi chú",
 
+            // Share functionality
+            "share": "Chia sẻ",
+            "share_document": "Chia sẻ tài liệu",
+            "shared_with": "Đã chia sẻ với",
+            "shared_by": "Chia sẻ bởi",
+            "share_with_users": "Chia sẻ với người dùng",
+            "no_users_available": "Không có người dùng khả dụng để chia sẻ",
+            "sharing": "Đang chia sẻ...",
+            "share_success": "Đã chia sẻ tài liệu thành công",
+            "visibility": "Phạm vi hiển thị",
+
+            // Permission Management
+            "permission_management_subtitle": "Quản lý quyền truy cập cho từng vai trò trong hệ thống",
+            "unsaved_changes": "Có thay đổi chưa lưu",
+            "unsaved_changes_warning": "Bạn có thay đổi chưa được lưu. Nhớ nhấn 'Lưu thay đổi' để áp dụng.",
+            "reset_to_default": "Khôi phục mặc định",
+            "error_loading_permissions": "Không thể tải danh sách quyền",
+            "permissions_updated": "Đã cập nhật quyền thành công",
+            "error_saving_permissions": "Lỗi khi lưu quyền",
+            "confirm_reset_permissions": "Bạn có chắc chắn muốn khôi phục về cấu hình quyền mặc định?",
+            "permissions_reset_success": "Đã khôi phục quyền về mặc định",
+            "error_resetting_permissions": "Lỗi khi khôi phục quyền",
+            "permission_info_title": "Lưu ý quan trọng",
+            "permission_info_1": "ADMIN luôn có tất cả quyền (*) và không thể thay đổi",
+            "permission_info_2": "Thay đổi quyền sẽ có hiệu lực ngay lập tức sau khi lưu",
+            "permission_info_3": "Hãy cẩn thận khi thu hồi quyền, có thể ảnh hưởng đến người dùng đang hoạt động",
+
             // Common
             "pagination_page": "Trang {{current}} / {{total}}",
             "previous": "Trước",
@@ -310,6 +339,7 @@ const resources = {
             "approvals": "Approvals",
             "users": "User Management",
             "tag_management": "Tag Management",
+            "permission_management": "Permission Management",
 
             // Dashboard Page
             "greeting": "Welcome back,",
@@ -403,6 +433,7 @@ const resources = {
             "search_users_placeholder": "Search staff...",
             "add_user": "Add Staff",
             "full_name": "Full Name",
+            "email": "Email",
             "username": "Username",
             "role": "Role",
             "active_status": "Active",
@@ -534,6 +565,33 @@ const resources = {
             "upload_new_version": "Upload New Version",
             "date": "Date",
             "note": "Note",
+
+            // Share functionality
+            "share": "Share",
+            "share_document": "Share Document",
+            "shared_with": "Shared with",
+            "shared_by": "Shared by",
+            "share_with_users": "Share with users",
+            "no_users_available": "No users available to share with",
+            "sharing": "Sharing...",
+            "share_success": "Document shared successfully",
+            "visibility": "Visibility",
+
+            // Permission Management
+            "permission_management_subtitle": "Manage access permissions for each role in the system",
+            "unsaved_changes": "Unsaved changes",
+            "unsaved_changes_warning": "You have unsaved changes. Remember to click 'Save Changes' to apply.",
+            "reset_to_default": "Reset to Default",
+            "error_loading_permissions": "Could not load permissions",
+            "permissions_updated": "Permissions updated successfully",
+            "error_saving_permissions": "Error saving permissions",
+            "confirm_reset_permissions": "Are you sure you want to reset permissions to default configuration?",
+            "permissions_reset_success": "Permissions reset to default successfully",
+            "error_resetting_permissions": "Error resetting permissions",
+            "permission_info_title": "Important Notes",
+            "permission_info_1": "ADMIN always has all permissions (*) and cannot be changed",
+            "permission_info_2": "Permission changes take effect immediately after saving",
+            "permission_info_3": "Be careful when revoking permissions, it may affect active users",
 
             // Common
             "pagination_page": "Page {{current}} / {{total}}",

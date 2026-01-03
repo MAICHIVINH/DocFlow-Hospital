@@ -32,12 +32,25 @@ const createNotification = async (recipientId, title, content, link = '', send_e
         if (send_email) {
             const user = await User.findByPk(recipientId);
             if (user && user.email) {
-                await emailService.sendEmail(
-                    user.email,
-                    title,
-                    content,
-                    `<p>${content}</p><p><a href="${process.env.CLIENT_URL || 'http://localhost:3000'}${link}">Xem chi tiết</a></p>`
-                );
+                console.log(`[NOTIFICATION] Found email for user ${recipientId}: ${user.email}`);
+                const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+                const emailHtml = `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+                        <h2 style="color: #2b6cb0;">${title}</h2>
+                        <p style="font-size: 16px; color: #4a5568;">${content}</p>
+                        ${link ? `<div style="margin-top: 25px;">
+                            <a href="${clientUrl}${link}" style="background-color: #3182ce; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                                Xem chi tiết
+                            </a>
+                        </div>` : ''}
+                        <hr style="margin-top: 30px; border: 0; border-top: 1px solid #eee;" />
+                        <p style="font-size: 12px; color: #a0aec0;">Đây là thông báo tự động từ hệ thống DocFlow Hospital. Vui lòng không trả lời email này.</p>
+                    </div>
+                `;
+                const sent = await emailService.sendEmail(user.email, title, content, emailHtml);
+                if (!sent) console.warn(`[NOTIFICATION] Email failed to send to ${user.email}`);
+            } else {
+                console.log(`[NOTIFICATION] User ${recipientId} has NO email address configured, skipping email.`);
             }
         }
 

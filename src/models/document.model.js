@@ -65,6 +65,12 @@ module.exports = (sequelize, DataTypes) => {
             otherKey: 'tag_id',
             as: 'tags'
         });
+
+        // Association for shared documents
+        Document.hasMany(models.SharedDocument, {
+            foreignKey: 'document_id',
+            as: 'sharedWith'
+        });
     };
 
     return Document;

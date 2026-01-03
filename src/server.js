@@ -11,6 +11,8 @@ const auditRoutes = require('./routes/audit.routes');
 const userRoutes = require('./routes/user.routes');
 const proxyRoutes = require('./routes/proxy.routes');
 const tagRoutes = require('./routes/tag.routes');
+const permissionRoutes = require('./routes/permission.routes');
+const permissionController = require('./controllers/permission.controller');
 
 const app = express();
 const http = require('http');
@@ -35,6 +37,7 @@ app.use('/api/audit', auditRoutes);
 app.use('/api/proxy', proxyRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tags', tagRoutes);
+app.use('/api/permissions', permissionRoutes);
 
 // Root route
 app.get('/', (req, res) => {
@@ -50,7 +53,10 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 // Initialize database and start server
-db.sequelize.sync({ alter: true }).then(() => {
+db.sequelize.sync({ alter: true }).then(async () => {
+    // Load permissions into cache on startup
+    await permissionController.loadPermissionsToCache();
+
     server.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}.`);
     });

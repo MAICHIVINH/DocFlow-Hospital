@@ -18,6 +18,8 @@ db.User = require('./user.model')(sequelize, Sequelize.DataTypes);
 db.Document = require('./document.model')(sequelize, Sequelize.DataTypes);
 db.DocumentVersion = require('./document-version.model')(sequelize, Sequelize.DataTypes);
 db.Tag = require('./tag.model')(sequelize, Sequelize.DataTypes);
+db.SharedDocument = require('./shared-document.model')(sequelize, Sequelize.DataTypes);
+db.Permission = require('./permission.model')(sequelize, Sequelize.DataTypes);
 db.Notification = require('./notification.model')(sequelize, Sequelize.DataTypes);
 db.AuditLog = require('./audit-log.model')(sequelize, Sequelize.DataTypes);
 
